@@ -309,6 +309,74 @@ function initCloudAuth() {
   updateAuthButton();
 }
 
+async function initRequiredAuth() {
+  const gate = document.getElementById("auth-gate");
+  const form = document.getElementById("auth-gate-form");
+  const message = document.getElementById("auth-gate-message");
+  if (!gate || !form || !window.kknSupabase) return false;
+
+  const session = await window.KKN_CLOUD.getSession();
+  if (session) {
+    gate.classList.add("hidden");
+    document.body.classList.remove("auth-locked");
+    return true;
+  }
+
+  form.addEventListener("click", async (event) => {
+    const button = event.target.closest("[data-gate-action]");
+    if (!button) return;
+    event.preventDefault();
+    const email = document.getElementById("auth-gate-email").value.trim();
+    const password = document.getElementById("auth-gate-password").value;
+    if (!email || password.length < 6) {
+      message.textContent = "Masukkan email dan password minimal 6 karakter.";
+      message.className = "mt-4 text-center text-xs text-rose-600";
+      return;
+    }
+
+    button.disabled = true;
+    message.textContent = "Memproses...";
+    message.className = "mt-4 text-center text-xs text-slate-500";
+    const result = button.dataset.gateAction === "signup"
+      ? await window.kknSupabase.auth.signUp({ email, password, options: { emailRedirectTo: window.location.href } })
+      : await window.kknSupabase.auth.signInWithPassword({ email, password });
+
+    if (result.error) {
+      button.disabled = false;
+      message.textContent = result.error.message;
+      message.className = "mt-4 text-center text-xs text-rose-600";
+      return;
+    }
+
+    if (!(await window.KKN_CLOUD.getSession())) {
+      button.disabled = false;
+      message.textContent = "Pendaftaran berhasil. Periksa email untuk konfirmasi, lalu login.";
+      message.className = "mt-4 text-center text-xs text-emerald-600";
+      return;
+    }
+
+    await window.KKN_CLOUD.seedOrPull();
+    gate.classList.add("hidden");
+    document.body.classList.remove("auth-locked");
+    initializeAppAfterAuth();
+  });
+
+  return false;
+}
+
+function initializeAppAfterAuth() {
+  window.KKN_CLOUD?.subscribe();
+  initCloudAuth();
+  initTabs();
+  loadSettings();
+  initLetterGenerator();
+  initEmailAutomation();
+  initLinks();
+  initSchedules();
+  updateStats();
+  document.getElementById("settings-form")?.addEventListener("submit", handleSaveSettings);
+}
+
 // 4. TAB NAVIGATION
 function initTabs() {
   const tabButtons = document.querySelectorAll("[data-tab-target]");
@@ -1295,17 +1363,8 @@ function renderDashboardLinks() {
 // 11. INITIALIZATION ON DOM READY
 document.addEventListener("DOMContentLoaded", () => {
   (async () => {
+    if (!(await initRequiredAuth())) return;
     await window.KKN_CLOUD?.pull();
-    window.KKN_CLOUD?.subscribe();
-    initCloudAuth();
-    initTabs();
-    loadSettings();
-    initLetterGenerator();
-    initEmailAutomation();
-    initLinks();
-    initSchedules();
-    updateStats();
-
-    document.getElementById("settings-form")?.addEventListener("submit", handleSaveSettings);
+    initializeAppAfterAuth();
   })();
 });

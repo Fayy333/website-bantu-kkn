@@ -19,6 +19,10 @@ body {
   background: var(--mande-clouds);
 }
 
+body.auth-locked > header,
+body.auth-locked > main,
+body.auth-locked > footer { display: none; }
+
 /* Mobile layout */
 @media (max-width: 640px) {
   body { overflow-x: hidden; }

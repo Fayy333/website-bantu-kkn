@@ -52,7 +52,28 @@
     }
   </script>
 </head>
-<body class="min-h-screen bg-[#fffdf4] text-slate-800 flex flex-col antialiased selection:bg-[#266a94] selection:text-white">
+<body class="auth-locked min-h-screen bg-[#fffdf4] text-slate-800 flex flex-col antialiased selection:bg-[#266a94] selection:text-white">
+
+  <!-- Required cloud login gate -->
+  <div id="auth-gate" class="fixed inset-0 z-[60] flex items-center justify-center bg-[#fffdf4] p-4">
+    <div class="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl shadow-[#124b68]/15 sm:p-8">
+      <div class="text-center">
+        <img class="mande-logo mx-auto mb-4" src="assets/logo-mandeh.svg" alt="Logo Mandeh">
+        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#438fb5]">KKN Rantak Pasisia</p>
+        <h2 class="mt-2 text-2xl font-extrabold text-[#124b68]">Login untuk melanjutkan</h2>
+        <p class="mt-2 text-sm leading-relaxed text-slate-500">Data KKN tersimpan di cloud dan dapat diperbarui bersama anggota lainnya.</p>
+      </div>
+      <form id="auth-gate-form" class="mt-6 space-y-3">
+        <input id="auth-gate-email" type="email" required placeholder="Email anggota KKN" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-[#438fb5] focus:ring-2 focus:ring-[#b7e3f5]">
+        <input id="auth-gate-password" type="password" required minlength="6" placeholder="Password minimal 6 karakter" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-[#438fb5] focus:ring-2 focus:ring-[#b7e3f5]">
+        <div class="grid grid-cols-2 gap-3 pt-2">
+          <button type="submit" data-gate-action="login" class="rounded-xl bg-[#124b68] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#0f3d55]">Login</button>
+          <button type="button" data-gate-action="signup" class="rounded-xl border border-[#438fb5] px-4 py-3 text-sm font-bold text-[#266a94] transition hover:bg-[#eff9fc]">Daftar</button>
+        </div>
+      </form>
+      <p id="auth-gate-message" class="mt-4 text-center text-xs text-slate-500"></p>
+    </div>
+  </div>
 
   <!-- Toast Notification Container -->
   <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
