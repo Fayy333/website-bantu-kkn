@@ -20,6 +20,18 @@ const DEFAULT_SETTINGS = {
   kkn_secretary_name: "Annisa Rahmawati"
 };
 
+const TEAM_MEMBERS = [
+  { name: "Hifzhan Azzam Naufal", study: "Manajemen 2024", role: "KORMANIT", tone: "bg-[#124b68]" },
+  { name: "Rahma Khoirun Nisa", study: "Akuntansi 2024", role: "BENDAHARA", tone: "bg-emerald-700" },
+  { name: "Fara Rona Azzahra", study: "Pembangunan Wilayah 2024", role: "SEKRETARIS", tone: "bg-amber-600" },
+  { name: "Ravi Yoanda Putra", study: "Manajemen 2024", role: "KORMASIT", tone: "bg-indigo-700" },
+  { name: "Gilang Rizki Anggara", study: "TPPAB 2024", role: "KORMASIT", tone: "bg-indigo-700" },
+  { name: "Syahiela Anisa Fitri", study: "Proteksi Tanaman 2024", role: "KORMATER AGRO", tone: "bg-lime-700" },
+  { name: "Alifia Yunika Khoirunnisa", study: "Keperawatan 2024", role: "KORMATER MEDIKA", tone: "bg-rose-700" },
+  { name: "M. Fayyadh Muslih", study: "TRI 2024", role: "KORMATER SAINTEK", tone: "bg-cyan-700" },
+  { name: "Farid Ali Fitriansyah", study: "BPW 2024", role: "KORMATER SOSHUM", tone: "bg-violet-700" }
+];
+
 const DEFAULT_LINKS = [
   {
     id: 1,
@@ -388,8 +400,58 @@ function initializeAppAfterAuth() {
   initEmailAutomation();
   initLinks();
   initSchedules();
+  initTeamAndProfile();
   updateStats();
   document.getElementById("settings-form")?.addEventListener("submit", handleSaveSettings);
+}
+
+function initTeamAndProfile() {
+  const grid = document.getElementById("team-structure-grid");
+  if (grid) {
+    grid.innerHTML = TEAM_MEMBERS.map((member, index) => `
+      <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-[#8bcce5] hover:shadow-md">
+        <div class="flex items-start gap-4">
+          <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${member.tone} text-lg font-extrabold text-white shadow-sm">${index + 1}</div>
+          <div class="min-w-0">
+            <h3 class="font-bold text-slate-900">${member.name}</h3>
+            <p class="mt-0.5 text-xs text-slate-500">${member.study}</p>
+            <span class="mt-3 inline-flex rounded-full bg-[#eff9fc] px-2.5 py-1 text-[11px] font-bold tracking-wide text-[#266a94]">${member.role}</span>
+          </div>
+        </div>
+      </article>
+    `).join("");
+  }
+
+  const modal = document.getElementById("profile-pdf-modal");
+  const frame = document.getElementById("profile-pdf-frame");
+  const close = document.getElementById("profile-pdf-close");
+  const inputs = [document.getElementById("profile-pdf-input"), document.getElementById("profile-pdf-input-tab")].filter(Boolean);
+
+  const openProfile = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (file.type !== "application/pdf") {
+      showToast("Pilih file profil dalam format PDF.", "error");
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    frame.src = url;
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    modal.dataset.objectUrl = url;
+  };
+
+  inputs.forEach((input) => input.addEventListener("change", openProfile));
+  close?.addEventListener("click", () => {
+    const url = modal.dataset.objectUrl;
+    if (url) URL.revokeObjectURL(url);
+    frame.src = "about:blank";
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  });
+  modal?.addEventListener("click", (event) => {
+    if (event.target === modal) close.click();
+  });
 }
 
 // 4. TAB NAVIGATION

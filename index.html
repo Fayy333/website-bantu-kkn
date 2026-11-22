@@ -156,6 +156,11 @@
         <span>Jadwal & Timeline</span>
       </button>
 
+      <button data-tab-target="tim" class="flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 whitespace-nowrap transition-all border-transparent text-slate-600 hover:text-slate-900 hover:border-slate-300">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-4-4h-1m-4 6H3v-2a4 4 0 014-4h3m5-7a4 4 0 11-8 0 4 4 0 018 0zm5 1a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+        <span>Struktur Tim</span>
+      </button>
+
       <button data-tab-target="settings" class="flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 whitespace-nowrap transition-all border-transparent text-slate-600 hover:text-slate-900 hover:border-slate-300">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
         <span>Pengaturan</span>
@@ -198,6 +203,23 @@
           </div>
         </div>
       </div>
+
+      <!-- Scan Profile -->
+      <section class="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-5 items-center rounded-2xl border border-[#b7e3f5] bg-gradient-to-r from-[#eff9fc] via-white to-[#fffdf4] p-5 shadow-sm">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-[0.16em] text-[#438fb5]">Profil Tim</p>
+          <h3 class="mt-1 text-xl font-extrabold text-[#124b68]">Scan Profile KKN Rantak Pasisia</h3>
+          <p class="mt-1 text-sm text-slate-600">Buka dokumen profil tim dan struktur organisasi dalam format PDF langsung dari perangkat Anda.</p>
+        </div>
+        <div class="flex flex-wrap gap-2 lg:justify-end">
+          <label for="profile-pdf-input" class="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#124b68] px-4 py-2.5 text-sm font-bold text-white shadow-md transition hover:bg-[#0f3d55]">
+            <span>▣</span>
+            <span>Scan Profile</span>
+          </label>
+          <input id="profile-pdf-input" type="file" accept="application/pdf" class="hidden">
+          <button type="button" data-tab-target="tim" class="rounded-xl border border-[#438fb5] px-4 py-2.5 text-sm font-bold text-[#266a94] transition hover:bg-white">Lihat Struktur Tim</button>
+        </div>
+      </section>
 
       <!-- Quick Stat Cards -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -848,7 +870,25 @@ Tim Pelaksana KKN {kelompok}
     </div>
 
     <!-- ========================================== -->
-    <!-- TAB 6: PENGATURAN IDENTITAS KKN -->
+    <!-- TAB 6: STRUKTUR TIM -->
+    <!-- ========================================== -->
+    <div id="tab-tim" class="tab-pane hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-5">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-[0.16em] text-[#438fb5]">KKN Rantak Pasisia</p>
+          <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Struktur Tim</h2>
+          <p class="text-sm text-slate-500 mt-1">Susunan pengurus dan koordinator bidang berdasarkan profil tim KKN.</p>
+        </div>
+        <label for="profile-pdf-input-tab" class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#124b68] px-4 py-2.5 text-sm font-bold text-white shadow-md transition hover:bg-[#0f3d55]">
+          <span>▣</span><span>Scan Profile PDF</span>
+        </label>
+        <input id="profile-pdf-input-tab" type="file" accept="application/pdf" class="hidden">
+      </div>
+      <div id="team-structure-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 7: PENGATURAN IDENTITAS KKN -->
     <!-- ========================================== -->
     <div id="tab-settings" class="tab-pane hidden max-w-4xl mx-auto space-y-8">
       <div class="border-b pb-5">
@@ -911,6 +951,19 @@ Tim Pelaksana KKN {kelompok}
     </div>
 
   </main>
+
+  <div id="profile-pdf-modal" class="fixed inset-0 z-[70] hidden items-center justify-center bg-slate-950/75 p-4 backdrop-blur-sm">
+    <div class="flex h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+      <div class="flex items-center justify-between border-b px-4 py-3">
+        <div>
+          <h3 class="font-bold text-slate-900">Scan Profile KKN Rantak Pasisia</h3>
+          <p class="text-xs text-slate-500">Dokumen profil tim yang dipilih dari perangkat Anda.</p>
+        </div>
+        <button id="profile-pdf-close" type="button" class="rounded-lg px-3 py-1 text-xl text-slate-400 hover:bg-slate-100 hover:text-slate-700">&times;</button>
+      </div>
+      <iframe id="profile-pdf-frame" title="Scan Profile KKN Rantak Pasisia" class="min-h-0 flex-1 w-full"></iframe>
+    </div>
+  </div>
 
   <!-- FOOTER -->
   <footer class="border-t border-slate-200 bg-white py-6 mt-auto">
