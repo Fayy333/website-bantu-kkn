@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KKN Hub - Portal Otomasi Surat, Email, Link & Jadwal KKN</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts & Custom Style -->
+  <link rel="stylesheet" href="style.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 flex flex-col antialiased selection:bg-blue-600 selection:text-white">
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
+  <!-- TOP NAVBAR -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 via-indigo-600 to-sky-500 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-bold text-slate-900 text-lg tracking-tight">KKN Hub</h1>
+            <span class="text-[11px] font-semibold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
+              Standalone App
+            </span>
+          </div>
+          <p class="text-xs text-slate-500 font-medium">
+            <span class="kkn-group-text">Kelompok KKN 102</span> &bull; <span class="kkn-village-text">Desa Sukamaju</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick status & Profile -->
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:flex items-center gap-2 px-3 py-1 bg-slate-100 rounded-full text-xs font-medium text-slate-700 border border-slate-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Penyimpanan Lokal Aktif</span>
+        </div>
+        <button data-tab-target="settings" class="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Pengaturan">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex overflow-x-auto no-scrollbar gap-1 border-t border-slate-100">
+      <button data-tab-target="dashboard" class="flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 whitespace-nowrap transition-all border-blue-600 text-blue-600 bg-blue-50/50">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+        <span>Dashboard</span>
+      </button>
+
+      <button data-tab-target="surat" class="flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 whitespace-nowrap transition-all border-transparent text-slate-600 hover:text-slate-900 hover:border-slate-300">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+        <span>Generator Surat (Word/PDF)</span>
+      </button>
+
+      <button data-tab-target="email" class="flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 whitespace-nowrap transition-all border-transparent text-slate-600 hover:text-slate-900 hover:border-slate-300">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+        <span>Otomasi Email</span>
+      </button>
+
+      <button data-tab-target="links" class="flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 whitespace-nowrap transition-all border-transparent text-slate-600 hover:text-slate-900 hover:border-slate-300">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+        <span>Link-Link Penting</span>
+      </button>
+
+      <button data-tab-target="jadwal" class="flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 whitespace-nowrap transition-all border-transparent text-slate-600 hover:text-slate-900 hover:border-slate-300">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+        <span>Jadwal & Timeline</span>
+      </button>
+
+      <button data-tab-target="settings" class="flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 whitespace-nowrap transition-all border-transparent text-slate-600 hover:text-slate-900 hover:border-slate-300">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+        <span>Pengaturan</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+
+    <!-- ========================================== -->
+    <!-- TAB 1: DASHBOARD RINGKASAN -->
+    <!-- ========================================== -->
+    <div id="tab-dashboard" class="tab-pane space-y-8">
+      <!-- Welcome Hero Banner -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-700 via-indigo-700 to-sky-600 p-8 text-white shadow-xl shadow-blue-500/10">
+        <div class="relative z-10 max-w-3xl space-y-3">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/15 backdrop-blur-md text-blue-100 border border-white/20">
+            ★ Portal Kerja Mandiri Mahasiswa KKN
+          </span>
+          <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+            Selamat Datang di <span class="kkn-group-text">KKN Hub</span>
+          </h2>
+          <p class="text-blue-100 text-sm sm:text-base leading-relaxed">
+            Aplikasi web mandiri berbasis HTML, CSS, dan JavaScript murni. Siap digunakan langsung di laptop atau HP tanpa perlu koneksi database luar untuk otomasi surat Word/PDF, pesan email undangan, direktori link posko, dan agenda program kerja.
+          </p>
+          <div class="flex flex-wrap items-center gap-4 pt-2 text-xs font-medium text-blue-200">
+            <div class="flex items-center gap-1.5">
+              <span>📍 Lokasi: <strong class="kkn-village-text text-white">Desa Sukamaju</strong></span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span>👥 Ketua: <strong class="kkn-leader-text text-white">Rizky Firmansyah</strong></span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span>🎓 DPL: <strong class="kkn-dpl-text text-white">Dr. Budi Santoso</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stat Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-blue-300 transition">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Link Penting</span>
+            <div class="p-2 bg-blue-50 text-blue-600 rounded-lg">🔗</div>
+          </div>
+          <div class="mt-2 flex items-baseline gap-2">
+            <span id="stat-links-count" class="text-2xl font-bold text-slate-900">0</span>
+            <span class="text-xs text-slate-400">tersimpan</span>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-indigo-300 transition">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Jadwal / Proker</span>
+            <div class="p-2 bg-indigo-50 text-indigo-600 rounded-lg">📅</div>
+          </div>
+          <div class="mt-2 flex items-baseline gap-2">
+            <span id="stat-schedules-count" class="text-2xl font-bold text-slate-900">0</span>
+            <span class="text-xs text-slate-400">agenda</span>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-emerald-300 transition">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Surat Dibuat</span>
+            <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg">📄</div>
+          </div>
+          <div class="mt-2 flex items-baseline gap-2">
+            <span id="stat-letters-count" class="text-2xl font-bold text-slate-900">0</span>
+            <span class="text-xs text-slate-400">arsip</span>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-purple-300 transition">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Email Broadcast</span>
+            <div class="p-2 bg-purple-50 text-purple-600 rounded-lg">✉️</div>
+          </div>
+          <div class="mt-2 flex items-baseline gap-2">
+            <span id="stat-emails-count" class="text-2xl font-bold text-slate-900">0</span>
+            <span class="text-xs text-slate-400">log</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions & Shortcut Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Agenda Terdekat (2 Kolom) -->
+        <div class="lg:col-span-2 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-bold text-slate-900 text-lg">Agenda & Program Kerja Terdekat</h3>
+              <p class="text-xs text-slate-500">Pantau jadwal pelaksanaan proker dan deadline wajib LPPM</p>
+            </div>
+            <button onclick="switchTab('jadwal')" class="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1">
+              Lihat Semua &rarr;
+            </button>
+          </div>
+
+          <div id="dashboard-schedules-list" class="bg-white rounded-xl border border-slate-200 divide-y divide-slate-100 shadow-sm overflow-hidden">
+            <!-- Render via app.js -->
+          </div>
+        </div>
+
+        <!-- Kolom Akses Cepat Link -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-bold text-slate-900 text-lg">Akses Cepat Link</h3>
+              <p class="text-xs text-slate-500">Folder drive, form, dan kontak desa</p>
+            </div>
+            <button onclick="switchTab('links')" class="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1">
+              Kelola &rarr;
+            </button>
+          </div>
+
+          <div id="dashboard-links-list" class="space-y-3">
+            <!-- Render via app.js -->
+          </div>
+
+          <!-- Card Aksi Cepat -->
+          <div class="bg-gradient-to-br from-indigo-50 to-blue-50 p-5 rounded-xl border border-indigo-100 space-y-3">
+            <div class="flex items-center gap-2 text-indigo-900 font-bold text-sm">
+              <span>⚡ Aksi Sekali Klik</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <button onclick="switchTab('surat')" class="p-2.5 bg-white rounded-lg border border-indigo-100 text-indigo-800 hover:bg-indigo-600 hover:text-white font-medium transition text-center shadow-sm">
+                Buat Surat Resmi
+              </button>
+              <button onclick="switchTab('email')" class="p-2.5 bg-white rounded-lg border border-indigo-100 text-indigo-800 hover:bg-indigo-600 hover:text-white font-medium transition text-center shadow-sm">
+                Kirim Email Tim
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: GENERATOR SURAT (WORD & PDF) -->
+    <!-- ========================================== -->
+    <div id="tab-surat" class="tab-pane hidden space-y-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-5">
+        <div>
+          <h2 class="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+            📄 Generator Surat Resmi KKN
+          </h2>
+          <p class="text-sm text-slate-500 mt-1">
+            Pilih template surat, sesuaikan rincian kegiatan, lalu download dalam format <strong>Microsoft Word (.doc)</strong> dan <strong>PDF (.pdf)</strong> siap cetak.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button id="btn-download-word" class="px-4 py-2.5 bg-blue-700 hover:bg-blue-800 text-white rounded-xl text-sm font-semibold flex items-center gap-2 shadow-md shadow-blue-600/20 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            <span>Download Word (.doc)</span>
+          </button>
+          <button id="btn-download-pdf" class="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-sm font-semibold flex items-center gap-2 shadow-md shadow-rose-600/20 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+            <span>Cetak / Simpan PDF</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Form Input Surat (7 Kolom) -->
+        <div class="lg:col-span-7 space-y-6">
+          <!-- Template Selector -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+            <label class="text-xs font-bold text-slate-700 uppercase tracking-wider block">
+              Pilih Template Surat KKN:
+            </label>
+            <select id="letter-template-select" class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <!-- Render via app.js -->
+            </select>
+          </div>
+
+          <!-- Data Nomor & Tanggal -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="font-bold text-slate-800 text-sm border-b pb-2">Nomor & Tanggal Surat</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label class="text-xs font-semibold text-slate-600 block mb-1">Nomor Surat</label>
+                <input type="text" id="letter-number" value="001/KKN-102/XI/2026" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono">
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600 block mb-1">Lampiran</label>
+                <input type="text" id="letter-attachment" value="-" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600 block mb-1">Tanggal Surat</label>
+                <input type="text" id="letter-date" value="25 November 2026" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+            </div>
+
+            <div>
+              <label class="text-xs font-semibold text-slate-600 block mb-1">Perihal (Hal)</label>
+              <input type="text" id="letter-regarding" value="Undangan Lokakarya Awal Program Kerja KKN" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-semibold">
+            </div>
+          </div>
+
+          <!-- Penerima -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="font-bold text-slate-800 text-sm border-b pb-2">Ditujukan Kepada (Penerima)</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="text-xs font-semibold text-slate-600 block mb-1">Nama / Panggilan</label>
+                <input type="text" id="letter-recipient-name" value="Bapak H. Mulyadi (Kepala Desa)" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600 block mb-1">Instansi / Alamat Kantor</label>
+                <input type="text" id="letter-recipient-title" value="Kantor Balai Desa Sukamaju" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+            </div>
+          </div>
+
+          <!-- Rincian Acara -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="font-bold text-slate-800 text-sm border-b pb-2">Detail Acara / Agenda Kegiatan</h3>
+            <div>
+              <label class="text-xs font-semibold text-slate-600 block mb-1">Nama Kegiatan</label>
+              <input type="text" id="letter-event-name" value="Lokakarya Awal & Silaturahmi Tim KKN dengan Perangkat Desa" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-semibold">
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label class="text-xs font-semibold text-slate-600 block mb-1">Hari, Tanggal</label>
+                <input type="text" id="letter-event-date" value="Kamis, 28 November 2026" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600 block mb-1">Waktu</label>
+                <input type="text" id="letter-event-time" value="09.00 WIB s/d Selesai" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600 block mb-1">Tempat</label>
+                <input type="text" id="letter-event-location" value="Aula Pertemuan Balai Desa" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+            </div>
+          </div>
+
+          <!-- Teks Paragraf -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="font-bold text-slate-800 text-sm border-b pb-2">Teks Paragraf Surat</h3>
+            <div>
+              <label class="text-xs font-semibold text-slate-600 block mb-1">Paragraf Pembuka</label>
+              <textarea id="letter-opening" rows="3" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none leading-relaxed">Sehubungan dengan pelaksanaan program Kuliah Kerja Nyata (KKN) mahasiswa di wilayah Desa, kami bermaksud mengundang Bapak/Ibu untuk dapat hadir dalam kegiatan Lokakarya Awal guna pemaparan dan koordinasi program kerja kemasyarakatan, yang insya Allah akan dilaksanakan pada:</textarea>
+            </div>
+            <div>
+              <label class="text-xs font-semibold text-slate-600 block mb-1">Paragraf Penutup</label>
+              <textarea id="letter-closing" rows="3" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none leading-relaxed">Mengingat pentingnya acara ini demi kelancaran sinergi program pengabdian bersama masyarakat, kami sangat mengharapkan kehadiran Bapak/Ibu tepat pada waktunya. Atas perhatian dan kerjasamanya, kami haturkan terima kasih.</textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pratinjau Kertas Surat A4 (5 Kolom) -->
+        <div class="lg:col-span-5 space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
+              👁️ Pratinjau Kertas A4 (Live Preview)
+            </span>
+            <span class="text-xs text-slate-400">Siap Cetak / Export</span>
+          </div>
+
+          <div id="print-area">
+            <div id="a4-letter-preview" class="a4-paper p-6 sm:p-8 rounded-xl font-serif text-[12px] leading-relaxed text-slate-900 space-y-3">
+              <!-- Kop Surat -->
+              <div class="text-center pb-2 border-b-2 border-black space-y-0.5">
+                <p class="font-bold text-[13px] tracking-wide uppercase">
+                  KULIAH KERJA NYATA (KKN) <span class="kkn-univ-text">UNIVERSITAS</span>
+                </p>
+                <p class="font-bold text-[12px] uppercase">
+                  <span class="kkn-group-text">KELOMPOK KKN 102</span> - <span class="kkn-village-text">DESA SUKAMAJU</span>
+                </p>
+                <p class="text-[10px] italic font-sans text-slate-600">
+                  Sekretariat / Posko: <span class="kkn-village-text">Desa Sukamaju</span> &bull; Email: kkn.official@univ.ac.id
+                </p>
+              </div>
+
+              <!-- Nomor & Tanggal -->
+              <div class="flex justify-between items-start pt-1 text-[11px] font-sans">
+                <div class="space-y-0.5">
+                  <p>Nomor &nbsp; : <span id="prev-letter-number" class="font-mono">001/KKN/XI/2026</span></p>
+                  <p>Lampiran : <span id="prev-letter-attachment">-</span></p>
+                  <p class="font-bold">Hal &nbsp; &nbsp; &nbsp; &nbsp;: <span id="prev-letter-regarding">Undangan Lokakarya</span></p>
+                </div>
+                <div class="text-right">
+                  <p id="prev-letter-date">Sukamaju, 25 November 2026</p>
+                </div>
+              </div>
+
+              <!-- Penerima -->
+              <div class="pt-2 text-[11px] font-sans">
+                <p>Kepada Yth.</p>
+                <p id="prev-recipient-name" class="font-bold">Bapak H. Mulyadi (Kepala Desa)</p>
+                <p id="prev-recipient-title">Kantor Balai Desa Sukamaju</p>
+                <p>di Tempat</p>
+              </div>
+
+              <!-- Isi Surat -->
+              <div class="pt-2 space-y-2 text-[11px] font-sans text-justify">
+                <p>Dengan hormat,</p>
+                <p id="prev-letter-opening">Sehubungan dengan pelaksanaan program Kuliah Kerja Nyata...</p>
+
+                <div class="pl-4 space-y-1 font-mono text-[10.5px]">
+                  <p>Hari, Tanggal : <span id="prev-event-date" class="font-bold">Kamis, 28 November 2026</span></p>
+                  <p>Waktu &nbsp; &nbsp; &nbsp; &nbsp; : <span id="prev-event-time">09.00 WIB s/d Selesai</span></p>
+                  <p>Tempat &nbsp; &nbsp; &nbsp; : <span id="prev-event-location">Aula Pertemuan Balai Desa</span></p>
+                  <p>Acara &nbsp; &nbsp; &nbsp; &nbsp; : <span id="prev-event-name" class="font-bold">Lokakarya Awal</span></p>
+                </div>
+
+                <p id="prev-letter-closing">Mengingat pentingnya acara ini demi kelancaran sinergi...</p>
+              </div>
+
+              <!-- Tanda Tangan -->
+              <div class="pt-4 text-center font-sans text-[11px]">
+                <p>Hormat kami,</p>
+                <p class="font-semibold">Panitia Pelaksana KKN <span class="kkn-group-text">Kelompok KKN 102</span></p>
+
+                <div class="grid grid-cols-2 gap-4 mt-8">
+                  <div>
+                    <p class="text-slate-400 text-[10px] mb-6">[Tanda Tangan]</p>
+                    <p class="font-bold underline"><span class="kkn-secretary-text">Annisa Rahmawati</span></p>
+                    <p class="text-[10px] text-slate-500">Sekretaris KKN</p>
+                  </div>
+                  <div>
+                    <p class="text-slate-400 text-[10px] mb-6">[Tanda Tangan]</p>
+                    <p class="font-bold underline"><span class="kkn-leader-text">Rizky Firmansyah</span></p>
+                    <p class="text-[10px] text-slate-500">Ketua Kelompok KKN</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Riwayat Arsip Surat -->
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+            <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">
+              Arsip Surat yang Pernah Dibuat
+            </h4>
+            <div id="letter-history-list" class="max-h-48 overflow-y-auto divide-y divide-slate-100 text-xs">
+              <!-- Render via app.js -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: OTOMASI EMAIL & BROADCAST -->
+    <!-- ========================================== -->
+    <div id="tab-email" class="tab-pane hidden space-y-8">
+      <div class="border-b pb-5">
+        <h2 class="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+          ✉️ Otomasi Email & Broadcast KKN
+        </h2>
+        <p class="text-sm text-slate-500 mt-1">
+          Kirim pesan undangan, pengingat piket, atau sosialisasi kegiatan langsung ke Gmail Web, aplikasi email, atau WhatsApp Blast dalam satu kali klik.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Form Email (7 Kolom) -->
+        <div class="lg:col-span-7 space-y-6">
+          <!-- Template Selector -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+            <label class="text-xs font-bold text-slate-700 uppercase tracking-wider block">
+              Pilih Template Pesan:
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <button type="button" data-email-template="undangan-rapat" class="p-3 rounded-lg text-left border text-xs transition border-blue-600 bg-blue-50/70 text-blue-800 font-semibold">
+                Undangan Rapat Tokoh Warga
+              </button>
+              <button type="button" data-email-template="reminder-presensi" class="p-3 rounded-lg text-left border text-xs transition border-slate-200 hover:border-slate-300 text-slate-700">
+                Pengingat Jadwal & Piket
+              </button>
+              <button type="button" data-email-template="ucapan-terima-kasih" class="p-3 rounded-lg text-left border text-xs transition border-slate-200 hover:border-slate-300 text-slate-700">
+                Ucapan Terima Kasih
+              </button>
+            </div>
+          </div>
+
+          <!-- Variabel Kegiatan Otomatis -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="font-bold text-slate-800 text-sm border-b pb-2">Variabel Pengganti Otomatis</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+              <div>
+                <label class="font-semibold text-slate-600 block mb-1">Kegiatan ({kegiatan})</label>
+                <input type="text" id="email-event-name" value="Lokakarya Awal Mahasiswa KKN" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+              <div>
+                <label class="font-semibold text-slate-600 block mb-1">Tanggal ({tanggal})</label>
+                <input type="text" id="email-event-date" value="Kamis, 28 November 2026, 09.00 WIB" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+              <div>
+                <label class="font-semibold text-slate-600 block mb-1">Lokasi ({lokasi})</label>
+                <input type="text" id="email-event-location" value="Balai Desa Sukamaju" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+            </div>
+          </div>
+
+          <!-- Subjek & Isi Pesan -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="font-bold text-slate-800 text-sm border-b pb-2">Subjek & Teks Email</h3>
+            <div>
+              <label class="text-xs font-semibold text-slate-600 block mb-1">Subjek Email</label>
+              <input type="text" id="email-subject" value="Undangan Resmi: {kegiatan} - KKN {kelompok}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-semibold">
+            </div>
+            <div>
+              <label class="text-xs font-semibold text-slate-600 block mb-1">Isi Pesan (Body)</label>
+              <textarea id="email-body" rows="8" class="w-full px-3 py-2 text-sm font-sans border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none leading-relaxed">Yth. {nama},
+
+Salam sejahtera kami sampaikan, semoga Bapak/Ibu senantiasa dalam keadaan sehat walafiat.
+
+Sehubungan dengan program Kuliah Kerja Nyata ({kelompok}) di {desa}, kami mengharapkan kehadiran Bapak/Ibu dalam acara {kegiatan} yang akan dilaksanakan pada:
+
+📅 Hari/Tanggal : {tanggal}
+⏰ Waktu        : Sesuai Undangan
+📍 Tempat       : {lokasi}
+
+Kehadiran dan masukan dari Bapak/Ibu sangat berarti bagi kelancaran program kemajuan desa kita bersama.
+
+Hormat kami,
+Tim Pelaksana KKN {kelompok}
+{desa} - {kampus}</textarea>
+            </div>
+          </div>
+
+          <!-- Penerima & Tombol Kirim -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="font-bold text-slate-800 text-sm border-b pb-2">Kirim Pesan / Broadcast</h3>
+            <div>
+              <label class="text-xs font-semibold text-slate-600 block mb-1">Alamat Email Penerima (Pisahkan dengan koma jika banyak):</label>
+              <input type="text" id="email-recipients" placeholder="kades.sukamaju@gmail.com, sekdes@gmail.com, dpl@univ.ac.id" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono">
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <button id="btn-send-gmail" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-semibold flex items-center gap-2 shadow-md shadow-red-500/20 transition">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
+                <span>Kirim via Gmail Web</span>
+              </button>
+
+              <button id="btn-send-client" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold flex items-center gap-2 shadow-md shadow-blue-500/20 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                <span>Email Client (Default)</span>
+              </button>
+
+              <button id="btn-send-wa" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-semibold flex items-center gap-2 shadow-md shadow-emerald-500/20 transition">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+                <span>Broadcast via WhatsApp</span>
+              </button>
+
+              <button id="btn-copy-email-text" class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-semibold flex items-center gap-1.5 transition">
+                <span>Salin Teks Pesan</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pratinjau Tampilan Email & Riwayat (5 Kolom) -->
+        <div class="lg:col-span-5 space-y-6">
+          <div class="space-y-3">
+            <span class="text-xs font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
+              👁️ Pratinjau Tampilan Email Penerima
+            </span>
+
+            <div class="bg-white rounded-xl border border-slate-200 shadow-md overflow-hidden">
+              <div class="bg-gradient-to-r from-blue-700 to-indigo-600 p-5 text-white text-center">
+                <h4 class="font-bold text-base kkn-group-text">Kelompok KKN 102</h4>
+                <p class="text-xs text-blue-100 mt-0.5">
+                  <span class="kkn-village-text">Desa Sukamaju</span> &bull; <span class="kkn-univ-text">Universitas</span>
+                </p>
+              </div>
+
+              <div class="p-4 border-b bg-slate-50 text-xs">
+                <p class="text-slate-500 font-mono text-[11px]">Subjek: <strong id="prev-email-subject" class="text-slate-800 font-sans">Undangan Resmi Kegiatan</strong></p>
+              </div>
+
+              <div id="prev-email-body" class="p-5 text-xs text-slate-700 space-y-3 leading-relaxed whitespace-pre-line font-sans min-h-[220px]">
+                <!-- Render via app.js -->
+              </div>
+
+              <div class="bg-slate-50 border-t border-slate-100 p-3 text-center text-[10px] text-slate-400">
+                Email Resmi Kuliah Kerja Nyata (KKN) &bull; Dikelola via KKN Hub
+              </div>
+            </div>
+          </div>
+
+          <!-- Log Pengiriman -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+            <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">
+              Riwayat Pengiriman Pesan
+            </h4>
+            <div id="email-logs-list" class="max-h-56 overflow-y-auto divide-y divide-slate-100 text-xs">
+              <!-- Render via app.js -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: LINK-LINK PENTING -->
+    <!-- ========================================== -->
+    <div id="tab-links" class="tab-pane hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-5">
+        <div>
+          <h2 class="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+            🔗 Direktori Link-Link Penting KKN
+          </h2>
+          <p class="text-sm text-slate-500 mt-1">
+            Kumpulan link Google Drive dokumentasi, SIM logbook LPPM, form presensi warga, dan kontak darurat desa.
+          </p>
+        </div>
+
+        <button id="btn-open-add-link-modal" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold flex items-center gap-2 shadow-md shadow-blue-500/20 transition shrink-0">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+          <span>Tambah Link Baru</span>
+        </button>
+      </div>
+
+      <!-- Filter & Search Bar -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1">
+          <button data-link-filter="Semua" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition bg-blue-600 text-white shadow-sm">Semua</button>
+          <button data-link-filter="Drive & Dokumen" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">Drive & Dokumen</button>
+          <button data-link-filter="Kampus & LPPM" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">Kampus & LPPM</button>
+          <button data-link-filter="Form & Presensi" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">Form & Presensi</button>
+          <button data-link-filter="Kontak Desa" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">Kontak Desa</button>
+        </div>
+
+        <div class="relative w-full sm:w-72">
+          <input type="text" id="link-search-input" placeholder="Cari link penting..." class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+      </div>
+
+      <!-- Link Cards Grid -->
+      <div id="links-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Render via app.js -->
+      </div>
+
+      <!-- Modal Tambah Link -->
+      <div id="add-link-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4">
+          <div class="flex items-center justify-between border-b pb-3">
+            <h3 class="font-bold text-slate-900 text-base">Tambah Link Penting KKN</h3>
+            <button id="btn-close-link-modal" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
+          </div>
+
+          <form id="add-link-form" class="space-y-4 text-xs">
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">Judul Link</label>
+              <input type="text" name="title" required placeholder="Contoh: Google Drive Foto Kegiatan" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">URL / Tautan Lengkap</label>
+              <input type="url" name="url" required placeholder="https://drive.google.com/..." class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono">
+            </div>
+
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">Kategori</label>
+              <select name="category" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <option value="Drive & Dokumen">Drive & Dokumen</option>
+                <option value="Kampus & LPPM">Kampus & LPPM</option>
+                <option value="Form & Presensi">Form & Presensi</option>
+                <option value="Kontak Desa">Kontak Desa</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">Keterangan Singkat</label>
+              <input type="text" name="description" placeholder="Folder dokumentasi harian" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+
+            <div class="flex items-center gap-2 pt-1">
+              <input type="checkbox" name="is_pinned" id="is_pinned_cb" class="rounded text-blue-600">
+              <label for="is_pinned_cb" class="font-medium text-slate-700 cursor-pointer">Sematkan di bagian atas (Pin)</label>
+            </div>
+
+            <div class="flex items-center justify-end gap-3 pt-3 border-t">
+              <button type="button" onclick="document.getElementById('add-link-modal').classList.add('hidden')" class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg font-semibold">Batal</button>
+              <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow-md shadow-blue-500/20">Simpan Link</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 5: JADWAL & TIMELINE KKN -->
+    <!-- ========================================== -->
+    <div id="tab-jadwal" class="tab-pane hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-5">
+        <div>
+          <h2 class="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+            📅 Jadwal Kegiatan & Timeline KKN
+          </h2>
+          <p class="text-sm text-slate-500 mt-1">
+            Susun agenda kerja, peringatan deadline LPPM, lokakarya desa, serta rotasi piket harian posko.
+          </p>
+        </div>
+
+        <button id="btn-open-add-schedule-modal" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold flex items-center gap-2 shadow-md shadow-blue-500/20 transition shrink-0">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+          <span>Tambah Agenda Baru</span>
+        </button>
+      </div>
+
+      <!-- Filter Kategori -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-1">
+        <button data-schedule-filter="Semua" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition bg-blue-600 text-white shadow-sm">Semua</button>
+        <button data-schedule-filter="Proker" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">Proker</button>
+        <button data-schedule-filter="Deadline LPPM" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">Deadline LPPM</button>
+        <button data-schedule-filter="Piket" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">Piket Posko</button>
+        <button data-schedule-filter="Rapat" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">Rapat Tim / Desa</button>
+      </div>
+
+      <!-- Timeline Cards List -->
+      <div id="schedules-list" class="space-y-3">
+        <!-- Render via app.js -->
+      </div>
+
+      <!-- Modal Tambah Jadwal -->
+      <div id="add-schedule-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4">
+          <div class="flex items-center justify-between border-b pb-3">
+            <h3 class="font-bold text-slate-900 text-base">Tambah Agenda Kegiatan KKN</h3>
+            <button id="btn-close-schedule-modal" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
+          </div>
+
+          <form id="add-schedule-form" class="space-y-4 text-xs">
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">Nama Kegiatan / Agenda</label>
+              <input type="text" name="title" required placeholder="Contoh: Lokakarya Awal Desa" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="font-semibold text-slate-700 block mb-1">Tanggal</label>
+                <input type="date" name="date" required class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+              <div>
+                <label class="font-semibold text-slate-700 block mb-1">Waktu / Jam (Opsional)</label>
+                <input type="text" name="time" placeholder="09:00 - 12:00" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="font-semibold text-slate-700 block mb-1">Kategori</label>
+                <select name="category" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                  <option value="Proker">Program Kerja (Proker)</option>
+                  <option value="Deadline LPPM">Deadline LPPM / Kampus</option>
+                  <option value="Piket">Piket Posko</option>
+                  <option value="Rapat">Rapat Tim / Desa</option>
+                </select>
+              </div>
+              <div>
+                <label class="font-semibold text-slate-700 block mb-1">Tingkat Prioritas</label>
+                <select name="priority" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                  <option value="Tinggi">Tinggi</option>
+                  <option value="Sedang" selected>Sedang</option>
+                  <option value="Rendah">Rendah</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">Lokasi Kegiatan</label>
+              <input type="text" name="location" placeholder="Balai Desa / Posko KKN" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">Deskripsi Tambahan</label>
+              <textarea name="description" rows="3" placeholder="Catatan perlengkapan atau divisi penanggung jawab" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
+            </div>
+
+            <div class="flex items-center justify-end gap-3 pt-3 border-t">
+              <button type="button" onclick="document.getElementById('add-schedule-modal').classList.add('hidden')" class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg font-semibold">Batal</button>
+              <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow-md shadow-blue-500/20">Simpan Agenda</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 6: PENGATURAN IDENTITAS KKN -->
+    <!-- ========================================== -->
+    <div id="tab-settings" class="tab-pane hidden max-w-4xl mx-auto space-y-8">
+      <div class="border-b pb-5">
+        <h2 class="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+          ⚙️ Pengaturan Identitas KKN
+        </h2>
+        <p class="text-sm text-slate-500 mt-1">
+          Sesuaikan profil kelompok KKN Anda. Data ini otomatis digunakan untuk Kop Surat resmi, tanda tangan penanggung jawab, serta teks broadcast email.
+        </p>
+      </div>
+
+      <form id="settings-form" class="space-y-6">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5">
+          <h3 class="font-bold text-slate-800 text-sm border-b pb-3">Identitas Kelompok & Kop Surat</h3>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">Nama Universitas / LPPM</label>
+              <input type="text" name="kkn_university" placeholder="Universitas Negeri / LPPM" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">Nama Kelompok KKN</label>
+              <input type="text" name="kkn_group_name" placeholder="Kelompok KKN 102" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">Desa & Kecamatan Penempatan</label>
+              <input type="text" name="kkn_village" placeholder="Desa Sukamaju, Kec. Cilaku" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">Dosen Pembimbing Lapangan (DPL)</label>
+              <input type="text" name="kkn_dpl_name" placeholder="Dr. Budi Santoso, M.Pd." class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">Nama Ketua Kelompok KKN</label>
+              <input type="text" name="kkn_leader_name" placeholder="Rizky Firmansyah" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">Nama Sekretaris KKN</label>
+              <input type="text" name="kkn_secretary_name" placeholder="Annisa Rahmawati" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end">
+          <button type="submit" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold shadow-lg shadow-blue-500/25 transition">
+            Simpan Identitas KKN
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-200 bg-white py-6 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+      <p>&copy; 2026 KKN Hub &bull; Solusi Otomasi Surat, Email & Jadwal Kuliah Kerja Nyata.</p>
+      <p>Murni HTML5, Tailwind CSS & JavaScript (Standalone Tanpa Instalasi Rumit).</p>
+    </div>
+  </footer>
+
+  <!-- App Script -->
+  <script src="app.js"></script>
+</body>
+</html>
