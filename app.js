@@ -32,6 +32,11 @@ const TEAM_MEMBERS = [
   { name: "Farid Ali Fitriansyah", study: "BPW 2024", role: "KORMATER SOSHUM", tone: "bg-violet-700" }
 ];
 const TEAM_PHOTOS_KEY = "kkn_team_photos";
+const TEAM_ROLE_DESCRIPTIONS = {
+  KORMANIT: "Koordinator Mahasiswa Tingkat Unit yang mengoordinasikan kegiatan dan jalannya organisasi mahasiswa di tingkat unit KKN.",
+  KORMASIT: "Koordinator Mahasiswa Tingkat Subunit yang membantu mengatur koordinasi anggota dan pelaksanaan kegiatan di tingkat subunit atau posko.",
+  KORMATER: "Koordinator Materi yang mengoordinasikan materi, program kerja, dan kebutuhan bidang pengabdian sesuai fokus keilmuan tim."
+};
 
 const DEFAULT_LINKS = [
   {
@@ -434,9 +439,9 @@ function initTeamAndProfile() {
         <div class="team-tree-root">${memberCard(TEAM_MEMBERS[0], 0, "team-person-card-lead")}</div>
         <div class="team-tree-connector"></div>
         <div class="team-tree-branches">
-          <section class="team-tree-branch"><h3>Pengurus Inti</h3><div class="team-tree-branch-cards">${memberCard(TEAM_MEMBERS[1], 1)}${memberCard(TEAM_MEMBERS[2], 2)}</div></section>
-          <section class="team-tree-branch"><h3>Koordinator Lapangan</h3><div class="team-tree-branch-cards">${memberCard(TEAM_MEMBERS[3], 3)}${memberCard(TEAM_MEMBERS[4], 4)}</div></section>
-          <section class="team-tree-branch team-tree-branch-wide"><h3>Koordinator Materi</h3><div class="team-tree-branch-cards">${TEAM_MEMBERS.slice(5).map((member, index) => memberCard(member, index + 5)).join("")}</div></section>
+          <section class="team-tree-branch"><h3>Pengurus Inti</h3><p class="team-role-description">${TEAM_ROLE_DESCRIPTIONS.KORMANIT}</p><div class="team-tree-branch-cards">${memberCard(TEAM_MEMBERS[1], 1)}${memberCard(TEAM_MEMBERS[2], 2)}</div></section>
+          <section class="team-tree-branch"><h3>Koordinator Lapangan</h3><p class="team-role-description">${TEAM_ROLE_DESCRIPTIONS.KORMASIT}</p><div class="team-tree-branch-cards">${memberCard(TEAM_MEMBERS[3], 3)}${memberCard(TEAM_MEMBERS[4], 4)}</div></section>
+          <section class="team-tree-branch team-tree-branch-wide"><h3>Koordinator Materi</h3><p class="team-role-description">${TEAM_ROLE_DESCRIPTIONS.KORMATER}</p><div class="team-tree-branch-cards">${TEAM_MEMBERS.slice(5).map((member, index) => memberCard(member, index + 5)).join("")}</div></section>
         </div>
       </div>`;
 
