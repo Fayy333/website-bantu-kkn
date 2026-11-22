@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KKN Hub - Portal Otomasi Surat, Email, Link & Jadwal KKN</title>
+  <title>KKN Rantak Pasisia - Portal Otomasi Surat, Email, Link & Jadwal KKN</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts & Custom Style -->
@@ -106,7 +106,7 @@
         <img class="mande-logo" src="assets/logo-mandeh.svg" alt="Logo Mandeh">
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="font-bold text-[#124b68] text-lg tracking-tight">KKN Hub</h1>
+            <h1 class="font-bold text-[#124b68] text-lg tracking-tight">KKN Rantak Pasisia</h1>
             <span class="text-[11px] font-semibold bg-[#b7e3f5] text-[#124b68] px-2 py-0.5 rounded-full">
               Standalone App
             </span>
@@ -177,7 +177,7 @@
             ★ Portal Kerja Mandiri Mahasiswa KKN
           </span>
           <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
-            Selamat Datang di <span class="kkn-group-text">KKN Hub</span>
+            Selamat Datang di <span class="kkn-group-text">KKN Rantak Pasisia</span>
           </h2>
           <p class="text-blue-100 text-sm sm:text-base leading-relaxed">
             Aplikasi web mandiri berbasis HTML, CSS, dan JavaScript murni. Siap digunakan langsung di laptop atau HP tanpa perlu koneksi database luar untuk otomasi surat Word/PDF, pesan email undangan, direktori link posko, dan agenda program kerja.
@@ -642,7 +642,7 @@ Tim Pelaksana KKN {kelompok}
               </div>
 
               <div class="bg-slate-50 border-t border-slate-100 p-3 text-center text-[10px] text-slate-400">
-                Email Resmi Kuliah Kerja Nyata (KKN) &bull; Dikelola via KKN Hub
+                Email Resmi Kuliah Kerja Nyata (KKN) &bull; Dikelola via KKN Rantak Pasisia
               </div>
             </div>
           </div>
@@ -787,8 +787,8 @@ Tim Pelaksana KKN {kelompok}
       <div id="add-schedule-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4">
           <div class="flex items-center justify-between border-b pb-3">
-            <h3 class="font-bold text-slate-900 text-base">Tambah Agenda Kegiatan KKN</h3>
-            <button id="btn-close-schedule-modal" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
+            <h3 id="schedule-modal-title" class="font-bold text-slate-900 text-base">Tambah Agenda Kegiatan KKN</h3>
+            <button id="btn-close-schedule-modal" type="button" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
           </div>
 
           <form id="add-schedule-form" class="space-y-4 text-xs">
@@ -839,8 +839,8 @@ Tim Pelaksana KKN {kelompok}
             </div>
 
             <div class="flex items-center justify-end gap-3 pt-3 border-t">
-              <button type="button" onclick="document.getElementById('add-schedule-modal').classList.add('hidden')" class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg font-semibold">Batal</button>
-              <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow-md shadow-blue-500/20">Simpan Agenda</button>
+              <button type="button" onclick="closeScheduleModal()" class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg font-semibold">Batal</button>
+              <button id="schedule-modal-submit" type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow-md shadow-blue-500/20">Simpan Agenda</button>
             </div>
           </form>
         </div>

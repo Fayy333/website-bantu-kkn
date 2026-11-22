@@ -14,7 +14,15 @@
     return data?.session || null;
   }
 
-  async function push(storageKey, value) {
+  function localChangedAt(storageKey) {
+    return Number(localStorage.getItem(`kkn_local_changed_${storageKey}`)) || 0;
+  }
+
+  function setLocalChangedAt(storageKey, timestamp) {
+    localStorage.setItem(`kkn_local_changed_${storageKey}`, String(timestamp));
+  }
+
+  async function push(storageKey, value, changedAt = Date.now()) {
     const table = tableByStorageKey[storageKey];
     if (!table || !(await getSession())) return;
 
@@ -23,10 +31,11 @@
       .upsert({
         id: "state",
         data: value,
-        updated_at: new Date().toISOString()
+        updated_at: new Date(changedAt).toISOString()
       });
 
     if (error) console.error(`Supabase sync failed for ${table}:`, error);
+    else setLocalChangedAt(storageKey, changedAt);
   }
 
   async function pull() {
@@ -35,7 +44,7 @@
     for (const [storageKey, table] of Object.entries(tableByStorageKey)) {
       const { data, error } = await window.kknSupabase
         .from(table)
-        .select("data")
+        .select("data, updated_at")
         .eq("id", "state")
         .maybeSingle();
 
@@ -44,8 +53,16 @@
         continue;
       }
 
-      if (data?.data !== undefined) {
+      if (data?.data === undefined) continue;
+
+      const cloudChangedAt = Date.parse(data.updated_at) || 0;
+      const localUpdatedAt = localChangedAt(storageKey);
+      if (localUpdatedAt > cloudChangedAt) {
+        const localData = localStorage.getItem(storageKey);
+        if (localData) await push(storageKey, JSON.parse(localData), localUpdatedAt);
+      } else {
         localStorage.setItem(storageKey, JSON.stringify(data.data));
+        setLocalChangedAt(storageKey, cloudChangedAt);
       }
     }
 
@@ -58,13 +75,21 @@
     for (const [storageKey, table] of Object.entries(tableByStorageKey)) {
       const { data, error } = await window.kknSupabase
         .from(table)
-        .select("data")
+        .select("data, updated_at")
         .eq("id", "state")
         .maybeSingle();
 
       if (error) continue;
       if (data?.data !== undefined) {
-        localStorage.setItem(storageKey, JSON.stringify(data.data));
+        const cloudChangedAt = Date.parse(data.updated_at) || 0;
+        const localUpdatedAt = localChangedAt(storageKey);
+        if (localUpdatedAt > cloudChangedAt) {
+          const localData = localStorage.getItem(storageKey);
+          if (localData) await push(storageKey, JSON.parse(localData), localUpdatedAt);
+        } else {
+          localStorage.setItem(storageKey, JSON.stringify(data.data));
+          setLocalChangedAt(storageKey, cloudChangedAt);
+        }
       } else {
         const localData = localStorage.getItem(storageKey);
         if (localData) await push(storageKey, JSON.parse(localData));

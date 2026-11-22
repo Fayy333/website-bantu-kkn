@@ -1,4 +1,4 @@
-// KKN Hub - Core Logic & Storage (Vanilla JS)
+// KKN Rantak Pasisia - Core Logic & Storage (Vanilla JS)
 
 // 1. DATA DEFAULT & STORAGE
 const STORAGE_KEYS = {
@@ -210,7 +210,9 @@ function getStorage(key, defaultVal) {
 
 function setStorage(key, val) {
   localStorage.setItem(key, JSON.stringify(val));
-  window.KKN_CLOUD?.push(key, val);
+  const changedAt = Date.now();
+  localStorage.setItem(`kkn_local_changed_${key}`, String(changedAt));
+  window.KKN_CLOUD?.push(key, val, changedAt);
 }
 
 // 3. TOAST NOTIFICATION
@@ -1140,14 +1142,15 @@ function copyToClipboard(txt) {
 
 // 9. JADWAL & AGENDA KKN
 let currentScheduleCategory = "Semua";
+let editingScheduleId = null;
 
 function initSchedules() {
   document.getElementById("btn-open-add-schedule-modal")?.addEventListener("click", () => {
-    document.getElementById("add-schedule-modal")?.classList.remove("hidden");
+    openScheduleModal();
   });
 
   document.getElementById("btn-close-schedule-modal")?.addEventListener("click", () => {
-    document.getElementById("add-schedule-modal")?.classList.add("hidden");
+    closeScheduleModal();
   });
 
   document.getElementById("add-schedule-form")?.addEventListener("submit", handleAddSchedule);
@@ -1231,6 +1234,9 @@ function renderSchedules() {
       </div>
 
       <div class="flex items-center gap-3 shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
+        <button onclick="editSchedule(${item.id})" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-lg hover:bg-blue-50 transition" title="Edit Agenda">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.5-9.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 8.5-8.5z"></path></svg>
+        </button>
         <button onclick="toggleScheduleStatus(${item.id})" class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition ${
         item.status === "Selesai"
           ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200"
@@ -1255,29 +1261,73 @@ function renderSchedules() {
   updateStats();
 }
 
+function openScheduleModal(schedule = null) {
+  const modal = document.getElementById("add-schedule-modal");
+  const form = document.getElementById("add-schedule-form");
+  if (!modal || !form) return;
+
+  editingScheduleId = schedule?.id ?? null;
+  form.reset();
+  form.querySelector('[name="priority"]').value = schedule?.priority || "Sedang";
+  document.getElementById("schedule-modal-title").textContent = schedule
+    ? "Edit Agenda Kegiatan KKN"
+    : "Tambah Agenda Kegiatan KKN";
+  document.getElementById("schedule-modal-submit").textContent = schedule
+    ? "Simpan Perubahan"
+    : "Simpan Agenda";
+
+  if (schedule) {
+    ["title", "date", "time", "category", "priority", "location", "description"].forEach((field) => {
+      if (form.elements[field]) form.elements[field].value = schedule[field] || "";
+    });
+  }
+
+  modal.classList.remove("hidden");
+}
+
+function closeScheduleModal() {
+  editingScheduleId = null;
+  document.getElementById("add-schedule-modal")?.classList.add("hidden");
+}
+
+function editSchedule(id) {
+  const schedules = getStorage(STORAGE_KEYS.SCHEDULES, DEFAULT_SCHEDULES);
+  const schedule = schedules.find((item) => item.id === id);
+  if (schedule) openScheduleModal(schedule);
+}
+
 function handleAddSchedule(e) {
   e.preventDefault();
   const form = e.target;
   const schedules = getStorage(STORAGE_KEYS.SCHEDULES, DEFAULT_SCHEDULES);
 
-  const newSchedule = {
-    id: Date.now(),
+  const scheduleData = {
     title: form.title.value,
     date: form.date.value,
     time: form.time.value,
     category: form.category.value,
     priority: form.priority.value,
-    status: "Belum Dimulai",
     location: form.location.value,
     description: form.description.value
   };
 
-  schedules.unshift(newSchedule);
+  if (editingScheduleId !== null) {
+    const found = schedules.find((item) => item.id === editingScheduleId);
+    if (!found) return;
+    Object.assign(found, scheduleData);
+    showToast("Agenda berhasil diperbarui!");
+  } else {
+    schedules.unshift({
+      id: Date.now(),
+      ...scheduleData,
+      status: "Belum Dimulai"
+    });
+    showToast("Agenda kegiatan baru berhasil disimpan!");
+  }
+
   setStorage(STORAGE_KEYS.SCHEDULES, schedules);
-  form.reset();
-  document.getElementById("add-schedule-modal")?.classList.add("hidden");
+  closeScheduleModal();
   renderSchedules();
-  showToast("Agenda kegiatan baru berhasil disimpan!");
 }
 
 function toggleScheduleStatus(id) {
@@ -1419,7 +1469,7 @@ function renderDashboardLinks() {
 document.addEventListener("DOMContentLoaded", () => {
   (async () => {
     if (!(await initRequiredAuth())) return;
-    await window.KKN_CLOUD?.pull();
+    await window.KKN_CLOUD?.seedOrPull();
     initializeAppAfterAuth();
   })();
 });
