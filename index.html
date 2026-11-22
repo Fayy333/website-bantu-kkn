@@ -704,7 +704,7 @@ Tim Pelaksana KKN {kelompok}
       <div id="add-link-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4">
           <div class="flex items-center justify-between border-b pb-3">
-            <h3 class="font-bold text-slate-900 text-base">Tambah Link Penting KKN</h3>
+            <h3 id="link-modal-title" class="font-bold text-slate-900 text-base">Tambah Link Penting KKN</h3>
             <button id="btn-close-link-modal" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
           </div>
 
@@ -742,7 +742,7 @@ Tim Pelaksana KKN {kelompok}
 
             <div class="flex items-center justify-end gap-3 pt-3 border-t">
               <button type="button" onclick="document.getElementById('add-link-modal').classList.add('hidden')" class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg font-semibold">Batal</button>
-              <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow-md shadow-blue-500/20">Simpan Link</button>
+              <button id="link-modal-submit" type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow-md shadow-blue-500/20">Simpan Link</button>
             </div>
           </form>
         </div>

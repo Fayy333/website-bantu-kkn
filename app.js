@@ -289,8 +289,11 @@ function initCloudAuth() {
       return;
     }
 
+    const signUpOptions = window.KKN_AUTH_REDIRECT_URL
+      ? { options: { emailRedirectTo: window.KKN_AUTH_REDIRECT_URL } }
+      : {};
     const result = actionButton.dataset.authAction === "signup"
-      ? await window.kknSupabase.auth.signUp({ email, password, options: { emailRedirectTo: window.location.href } })
+      ? await window.kknSupabase.auth.signUp({ email, password, ...signUpOptions })
       : await window.kknSupabase.auth.signInWithPassword({ email, password });
 
     if (result.error) {
@@ -315,6 +318,13 @@ async function initRequiredAuth() {
   const message = document.getElementById("auth-gate-message");
   if (!gate || !form || !window.kknSupabase) return false;
 
+  if (window.location.protocol === "file:") {
+    form.querySelectorAll("button").forEach((button) => { button.disabled = true; });
+    message.textContent = "Jalankan aplikasi melalui http://localhost, bukan dengan membuka file HTML langsung.";
+    message.className = "mt-4 text-center text-xs text-rose-600";
+    return false;
+  }
+
   const session = await window.KKN_CLOUD.getSession();
   if (session) {
     gate.classList.add("hidden");
@@ -337,8 +347,11 @@ async function initRequiredAuth() {
     button.disabled = true;
     message.textContent = "Memproses...";
     message.className = "mt-4 text-center text-xs text-slate-500";
+    const signUpOptions = window.KKN_AUTH_REDIRECT_URL
+      ? { options: { emailRedirectTo: window.KKN_AUTH_REDIRECT_URL } }
+      : {};
     const result = button.dataset.gateAction === "signup"
-      ? await window.kknSupabase.auth.signUp({ email, password, options: { emailRedirectTo: window.location.href } })
+      ? await window.kknSupabase.auth.signUp({ email, password, ...signUpOptions })
       : await window.kknSupabase.auth.signInWithPassword({ email, password });
 
     if (result.error) {
@@ -949,7 +962,7 @@ let currentLinkSearch = "";
 
 function initLinks() {
   document.getElementById("btn-open-add-link-modal")?.addEventListener("click", () => {
-    document.getElementById("add-link-modal")?.classList.remove("hidden");
+    openLinkModal();
   });
 
   document.getElementById("btn-close-link-modal")?.addEventListener("click", () => {
@@ -1033,6 +1046,9 @@ function renderLinks() {
           <button onclick="copyToClipboard('${item.url}')" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition" title="Salin URL">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
           </button>
+          <button onclick="editLink(${item.id})" class="p-1.5 text-slate-400 hover:text-blue-700 rounded-lg hover:bg-blue-50 transition" title="Edit Link">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.5-9.5a2.121 2.121 0 113 3L12 15l-4 1 1-4 7.5-7.5z"></path></svg>
+          </button>
           <button onclick="deleteLink(${item.id})" class="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition" title="Hapus Link">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
           </button>
@@ -1047,13 +1063,46 @@ function renderLinks() {
   updateStats();
 }
 
+function openLinkModal(link = null) {
+  const modal = document.getElementById("add-link-modal");
+  const form = document.getElementById("add-link-form");
+  const title = document.getElementById("link-modal-title");
+  const submit = document.getElementById("link-modal-submit");
+  if (!modal || !form) return;
+
+  form.reset();
+  if (link) {
+    form.dataset.editingId = String(link.id);
+    form.title.value = link.title || "";
+    form.url.value = link.url || "";
+    form.category.value = link.category || "Lainnya";
+    form.description.value = link.description || "";
+    form.is_pinned.checked = Boolean(link.is_pinned);
+    if (title) title.textContent = "Edit Link Penting KKN";
+    if (submit) submit.textContent = "Simpan Perubahan";
+  } else {
+    delete form.dataset.editingId;
+    if (title) title.textContent = "Tambah Link Penting KKN";
+    if (submit) submit.textContent = "Simpan Link";
+  }
+
+  modal.classList.remove("hidden");
+}
+
+function editLink(id) {
+  const links = getStorage(STORAGE_KEYS.LINKS, DEFAULT_LINKS);
+  const link = links.find((item) => String(item.id) === String(id));
+  if (link) openLinkModal(link);
+}
+
 function handleAddLink(e) {
   e.preventDefault();
   const form = e.target;
   const links = getStorage(STORAGE_KEYS.LINKS, DEFAULT_LINKS);
 
+  const editingId = form.dataset.editingId;
   const newLink = {
-    id: Date.now(),
+    id: editingId || Date.now(),
     title: form.title.value,
     url: form.url.value,
     category: form.category.value,
@@ -1061,12 +1110,18 @@ function handleAddLink(e) {
     is_pinned: form.is_pinned.checked ? 1 : 0
   };
 
-  links.unshift(newLink);
+  if (editingId) {
+    const index = links.findIndex((item) => String(item.id) === String(editingId));
+    if (index !== -1) links[index] = newLink;
+  } else {
+    links.unshift(newLink);
+  }
   setStorage(STORAGE_KEYS.LINKS, links);
   form.reset();
+  delete form.dataset.editingId;
   document.getElementById("add-link-modal")?.classList.add("hidden");
   renderLinks();
-  showToast("Link penting berhasil ditambahkan!");
+  showToast(editingId ? "Link penting berhasil diperbarui!" : "Link penting berhasil ditambahkan!");
 }
 
 function deleteLink(id) {

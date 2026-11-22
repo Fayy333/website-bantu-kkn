@@ -7,3 +7,8 @@ window.kknSupabase = window.supabase.createClient(
   KKN_SUPABASE_URL,
   KKN_SUPABASE_PUBLISHABLE_KEY
 );
+
+// Supabase email links need an HTTP(S) URL. A file:// page cannot be a redirect target.
+window.KKN_AUTH_REDIRECT_URL = /^https?:$/.test(window.location.protocol)
+  ? window.location.href
+  : undefined;
