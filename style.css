@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Fira+Code:wght@400;500;600&display=swap');
+
 /* Custom styling for KKN Hub Standalone */
 /* Mandeh brand palette: Clouds, Clear Skies, Deep Ocean, Blueberry, Bluebird */
 :root {
@@ -12,11 +14,47 @@
 
 .mande-logo { width: 46px; height: 46px; flex: 0 0 auto; filter: drop-shadow(0 5px 8px rgba(18, 75, 104, .2)); }
 .mande-hero-gradient { background: linear-gradient(115deg, var(--mande-deep-ocean), var(--mande-blueberry) 55%, var(--mande-bluebird)); }
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Fira+Code:wght@400;500;600&display=swap');
-
 body {
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--mande-clouds);
+}
+
+/* Mobile layout */
+@media (max-width: 640px) {
+  body { overflow-x: hidden; }
+
+  header .max-w-7xl { min-width: 0; }
+  header .max-w-7xl:first-child { height: 60px; }
+  .mande-logo { width: 38px; height: 38px; }
+  #cloud-auth-button { padding: 0.5rem !important; }
+  #cloud-auth-button span:last-child { display: none; }
+  header h1 { font-size: 0.95rem !important; }
+  header p { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  header .text-\[11px\] { display: none; }
+  header > div:last-child button { padding: 0.7rem 0.65rem !important; font-size: 0.72rem !important; gap: 0.35rem !important; }
+  header > div:last-child button svg { width: 0.85rem; height: 0.85rem; }
+
+  main { padding-top: 1.25rem !important; padding-bottom: 1.5rem !important; }
+  .mande-hero-gradient { padding: 1.25rem !important; border-radius: 1rem !important; }
+  .mande-hero-gradient h2 { font-size: 1.55rem !important; line-height: 1.2; }
+  .mande-hero-gradient p { font-size: 0.78rem !important; }
+  .mande-hero-gradient .flex-wrap { gap: 0.55rem !important; }
+  .mande-hero-gradient .flex-wrap > div { width: 100%; }
+
+  #toast-container { top: 0.75rem; right: 0.75rem; left: 0.75rem; max-width: none; width: auto; }
+  .tab-pane > .flex:first-child h2 { font-size: 1.35rem !important; }
+  #tab-surat > div:first-child > .flex { width: 100%; }
+  #tab-surat > div:first-child > .flex button { flex: 1; justify-content: center; padding-left: 0.55rem !important; padding-right: 0.55rem !important; font-size: 0.72rem !important; }
+
+  #print-area { overflow-x: auto; margin-left: -0.25rem; margin-right: -0.25rem; padding: 0.25rem; }
+  #a4-letter-preview { min-height: 0; padding: 1rem !important; border-radius: 0.75rem !important; font-size: 10px !important; line-height: 1.45 !important; }
+  #a4-letter-preview .grid-cols-2 { gap: 0.5rem !important; }
+  #a4-letter-preview .mt-8 { margin-top: 1.5rem !important; }
+
+  #add-link-modal > div, #add-schedule-modal > div { width: calc(100% - 1.5rem); max-height: 90vh; overflow-y: auto; }
+  #add-link-modal .grid-cols-2, #add-schedule-modal .grid-cols-2 { grid-template-columns: minmax(0, 1fr) !important; }
+  #tab-jadwal .grid-cols-2 { grid-template-columns: minmax(0, 1fr) !important; }
+  footer { text-align: center; }
 }
 
 .font-serif-doc {

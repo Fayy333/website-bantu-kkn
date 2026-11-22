@@ -210,6 +210,7 @@ function getStorage(key, defaultVal) {
 
 function setStorage(key, val) {
   localStorage.setItem(key, JSON.stringify(val));
+  window.KKN_CLOUD?.push(key, val);
 }
 
 // 3. TOAST NOTIFICATION
@@ -238,6 +239,74 @@ function showToast(message, type = "success") {
     toast.classList.add("opacity-0", "translate-y-2");
     setTimeout(() => toast.remove(), 300);
   }, 3500);
+}
+
+function initCloudAuth() {
+  const authButton = document.getElementById("cloud-auth-button");
+  const modal = document.getElementById("cloud-auth-modal");
+  const form = document.getElementById("cloud-auth-form");
+  const closeButton = document.getElementById("cloud-auth-close");
+  if (!authButton || !modal || !form || !window.kknSupabase) return;
+
+  const updateAuthButton = async () => {
+    const session = await window.KKN_CLOUD.getSession();
+    const label = authButton.querySelector("span:last-child");
+    const dot = authButton.querySelector("span:first-child");
+    if (session) {
+      label.textContent = "Cloud Aktif";
+      dot.className = "w-2 h-2 rounded-full bg-emerald-500";
+      authButton.title = session.user.email || "Cloud aktif";
+    } else {
+      label.textContent = "Login Cloud";
+      dot.className = "w-2 h-2 rounded-full bg-amber-400";
+    }
+  };
+
+  authButton.addEventListener("click", async () => {
+    if (await window.KKN_CLOUD.getSession()) {
+      await window.kknSupabase.auth.signOut();
+      await updateAuthButton();
+      showToast("Logout cloud berhasil.");
+      return;
+    }
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+  });
+
+  closeButton.addEventListener("click", () => {
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  });
+
+  form.addEventListener("click", async (event) => {
+    const actionButton = event.target.closest("[data-auth-action]");
+    if (!actionButton) return;
+    event.preventDefault();
+    const email = document.getElementById("cloud-auth-email").value.trim();
+    const password = document.getElementById("cloud-auth-password").value;
+    if (!email || password.length < 6) {
+      showToast("Isi email dan password minimal 6 karakter.", "error");
+      return;
+    }
+
+    const result = actionButton.dataset.authAction === "signup"
+      ? await window.kknSupabase.auth.signUp({ email, password, options: { emailRedirectTo: window.location.href } })
+      : await window.kknSupabase.auth.signInWithPassword({ email, password });
+
+    if (result.error) {
+      showToast(result.error.message, "error");
+      return;
+    }
+
+    await window.KKN_CLOUD.seedOrPull();
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+    await updateAuthButton();
+    window.location.reload();
+  });
+
+  window.kknSupabase.auth.onAuthStateChange(updateAuthButton);
+  updateAuthButton();
 }
 
 // 4. TAB NAVIGATION
@@ -1225,13 +1294,18 @@ function renderDashboardLinks() {
 
 // 11. INITIALIZATION ON DOM READY
 document.addEventListener("DOMContentLoaded", () => {
-  initTabs();
-  loadSettings();
-  initLetterGenerator();
-  initEmailAutomation();
-  initLinks();
-  initSchedules();
-  updateStats();
+  (async () => {
+    await window.KKN_CLOUD?.pull();
+    window.KKN_CLOUD?.subscribe();
+    initCloudAuth();
+    initTabs();
+    loadSettings();
+    initLetterGenerator();
+    initEmailAutomation();
+    initLinks();
+    initSchedules();
+    updateStats();
 
-  document.getElementById("settings-form")?.addEventListener("submit", handleSaveSettings);
+    document.getElementById("settings-form")?.addEventListener("submit", handleSaveSettings);
+  })();
 });
