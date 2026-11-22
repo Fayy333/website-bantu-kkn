@@ -90,6 +90,17 @@ body.auth-locked > footer { display: none; }
   .team-tree-branch-cards { grid-template-columns: minmax(0, 1fr); }
 }
 
+/* Struktur tim: beri ruang penuh pada kartu saat layar tablet/HP */
+@media (max-width: 900px) {
+  .team-tree-branches { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
+  .team-tree-branches::before { left: 50%; right: auto; }
+  .team-tree-branch { grid-column: auto; }
+  .team-tree-branch-cards,
+  .team-tree-branch-wide .team-tree-branch-cards { grid-template-columns: minmax(0, 1fr); }
+  .team-person-card { width: 100%; }
+  .team-tree-branch h3 { font-size: .72rem; }
+}
+
 .font-serif-doc {
   font-family: 'Lora', Georgia, 'Times New Roman', serif;
 }
