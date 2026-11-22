@@ -620,45 +620,36 @@ function downloadWordDocument() {
   showToast("Surat Microsoft Word (.doc) berhasil diunduh!");
 }
 
-// Download PDF via browser print / jsPDF
+// Download PDF directly in the browser
 function downloadPdfDocument() {
-  const printContent = document.getElementById("a4-letter-preview");
-  if (!printContent) return;
+  const letterPreview = document.getElementById("a4-letter-preview");
+  if (!letterPreview) return;
 
-  saveLetterHistoryRecord();
-
-  // Print popup window for clean PDF generation
-  const printWindow = window.open("", "_blank", "width=800,height=1000");
-  if (!printWindow) {
-    window.print();
+  if (typeof html2pdf !== "function") {
+    showToast("Generator PDF belum siap. Periksa koneksi internet lalu coba lagi.");
     return;
   }
 
-  printWindow.document.write(`
-    <html>
-      <head>
-        <title>Cetak Surat KKN</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-        <style>
-          @page { size: A4; margin: 20mm; }
-          body { font-family: Arial, sans-serif; font-size: 11pt; color: #000; line-height: 1.5; background: #fff; }
-          .kop-border { border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 16px; }
-        </style>
-      </head>
-      <body>
-        ${printContent.innerHTML}
-        <script>
-          window.onload = function() {
-            window.focus();
-            window.print();
-            window.onafterprint = function() { window.close(); };
-          };
-        <\/script>
-      </body>
-    </html>
-  `);
-  printWindow.document.close();
-  showToast("Jendela cetak / simpan PDF telah dibuka!");
+  saveLetterHistoryRecord();
+
+  const settings = getStorage(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
+  const safeFilename = (settings.kkn_group_name || "Surat_KKN")
+    .replace(/[^a-zA-Z0-9_-]/g, "_");
+  const pdfOptions = {
+    margin: [10, 10, 10, 10],
+    filename: `${safeFilename}.pdf`,
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
+    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    pagebreak: { mode: ["css", "legacy"] }
+  };
+
+  html2pdf()
+    .set(pdfOptions)
+    .from(letterPreview)
+    .save()
+    .then(() => showToast("Surat PDF berhasil diunduh!"))
+    .catch(() => showToast("PDF gagal dibuat. Silakan coba lagi."));
 }
 
 // 7. OTOMASI EMAIL & BROADCAST
