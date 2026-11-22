@@ -13,7 +13,14 @@
 }
 
 .mande-logo { width: 46px; height: 46px; flex: 0 0 auto; filter: drop-shadow(0 5px 8px rgba(18, 75, 104, .2)); }
-.mande-hero-gradient { background: linear-gradient(115deg, var(--mande-deep-ocean), var(--mande-blueberry) 55%, var(--mande-bluebird)); }
+.mande-hero-gradient {
+  background-image:
+    linear-gradient(90deg, rgba(9, 44, 62, .88) 0%, rgba(18, 75, 104, .68) 44%, rgba(18, 75, 104, .28) 100%),
+    url('assets/mande-hero-background.png');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
 body {
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--mande-clouds);
