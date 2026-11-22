@@ -10,10 +10,11 @@ const STORAGE_KEYS = {
 };
 
 const DEFAULT_SETTINGS = {
-  kkn_group_name: "Kelompok KKN 102",
-  kkn_village: "Desa Sukamaju, Kec. Cilaku",
+  kkn_group_name: "KKN Rantak Pasisia",
+  kkn_village: "Mandeh Kabupaten, Pesisir Selatan, Sumatra Barat",
+  kkn_period: "Periode II Juli - Agustus 2027",
   kkn_university: "Universitas Negeri / LPPM",
-  kkn_year: "2026",
+  kkn_year: "2027",
   kkn_dpl_name: "Dr. Budi Santoso, M.Pd.",
   kkn_leader_name: "Rizky Firmansyah",
   kkn_secretary_name: "Annisa Rahmawati"
@@ -284,7 +285,10 @@ function loadSettings() {
     el.textContent = settings.kkn_group_name || "Kelompok KKN";
   });
   document.querySelectorAll(".kkn-village-text").forEach((el) => {
-    el.textContent = settings.kkn_village || "Desa Sukamaju";
+    el.textContent = settings.kkn_village || "Mandeh Kabupaten, Pesisir Selatan, Sumatra Barat";
+  });
+  document.querySelectorAll(".kkn-period-text").forEach((el) => {
+    el.textContent = settings.kkn_period || "Periode II Juli - Agustus 2027";
   });
   document.querySelectorAll(".kkn-univ-text").forEach((el) => {
     el.textContent = settings.kkn_university || "Universitas";
@@ -319,6 +323,7 @@ function handleSaveSettings(e) {
     kkn_university: form.kkn_university.value,
     kkn_group_name: form.kkn_group_name.value,
     kkn_village: form.kkn_village.value,
+    kkn_period: form.kkn_period.value,
     kkn_dpl_name: form.kkn_dpl_name.value,
     kkn_leader_name: form.kkn_leader_name.value,
     kkn_secretary_name: form.kkn_secretary_name.value
@@ -381,14 +386,14 @@ function initLetterGenerator() {
 function updateLetterPreview() {
   const settings = getStorage(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
 
-  const num = document.getElementById("letter-number")?.value || "001/KKN/XI/2026";
+  const num = document.getElementById("letter-number")?.value || "001/KKN-RP/VII/2027";
   const att = document.getElementById("letter-attachment")?.value || "-";
   const reg = document.getElementById("letter-regarding")?.value || "Surat KKN";
-  const date = document.getElementById("letter-date")?.value || "25 November 2026";
+  const date = document.getElementById("letter-date")?.value || "Juli 2027";
   const rName = document.getElementById("letter-recipient-name")?.value || "Bapak Kepala Desa";
   const rTitle = document.getElementById("letter-recipient-title")?.value || "Kantor Balai Desa";
   const eName = document.getElementById("letter-event-name")?.value || "Kegiatan KKN";
-  const eDate = document.getElementById("letter-event-date")?.value || "Kamis, 28 November 2026";
+  const eDate = document.getElementById("letter-event-date")?.value || "Juli - Agustus 2027";
   const eTime = document.getElementById("letter-event-time")?.value || "09.00 WIB s/d Selesai";
   const eLoc = document.getElementById("letter-event-location")?.value || "Balai Desa";
   const op = document.getElementById("letter-opening")?.value || "";

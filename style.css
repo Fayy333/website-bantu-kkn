@@ -1,8 +1,22 @@
 /* Custom styling for KKN Hub Standalone */
+/* Mandeh brand palette: Clouds, Clear Skies, Deep Ocean, Blueberry, Bluebird */
+:root {
+  --mande-clouds: #fffdf4;
+  --mande-clear-skies: #b7e3f5;
+  --mande-deep-ocean: #124b68;
+  --mande-blueberry: #266a94;
+  --mande-bluebird: #438fb5;
+  --mande-sun: #f6c453;
+  --mande-sunset: #f38d3d;
+}
+
+.mande-logo { width: 46px; height: 46px; flex: 0 0 auto; filter: drop-shadow(0 5px 8px rgba(18, 75, 104, .2)); }
+.mande-hero-gradient { background: linear-gradient(115deg, var(--mande-deep-ocean), var(--mande-blueberry) 55%, var(--mande-bluebird)); }
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Fira+Code:wght@400;500;600&display=swap');
 
 body {
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--mande-clouds);
 }
 
 .font-serif-doc {

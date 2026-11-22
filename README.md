@@ -18,6 +18,7 @@ Aplikasi ini **tidak memerlukan instalasi server atau dependensi apa pun** (tanp
    - Template surat: Undangan Lokakarya, Izin Tempat/Balai, Permohonan Narasumber, Pemberitahuan Proker, dan Ucapan Terima Kasih.
    - *Live preview* kertas surat A4 dengan Kop Surat berstandar resmi, nomor surat, dan kolom tanda tangan Ketua & Sekretaris KKN.
    - Ekspor langsung ke berkas **Microsoft Word (.doc)** dan **download PDF** tanpa membuka dialog cetak.
+   - Identitas visual menggunakan logo Mandeh dan palet Clouds, Clear Skies, Deep Ocean, Blueberry, Bluebird, serta aksen Sun/Sunset.
 
 2. **Otomasi Email & Broadcast**:
    - Template pesan dengan variabel dinamis otomatis (`{nama}`, `{kegiatan}`, `{tanggal}`, `{lokasi}`, `{kelompok}`, `{desa}`).

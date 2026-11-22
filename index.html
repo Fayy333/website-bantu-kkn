@@ -15,14 +15,32 @@
       theme: {
         extend: {
           colors: {
+            blue: {
+              50: '#eff9fc', 100: '#d9f2fa', 200: '#b7e3f5', 300: '#8bcce5',
+              400: '#65b0d0', 500: '#438fb5', 600: '#266a94', 700: '#124b68',
+              800: '#0f3d55', 900: '#092c3e'
+            },
+            sky: {
+              50: '#f2fbfe', 100: '#dff5fb', 200: '#b7e3f5', 300: '#8bcce5',
+              400: '#65b0d0', 500: '#438fb5', 600: '#266a94', 700: '#124b68'
+            },
+            indigo: {
+              50: '#eef6fa', 100: '#d8edf5', 200: '#b7e3f5', 300: '#8bcce5',
+              400: '#65b0d0', 500: '#438fb5', 600: '#266a94', 700: '#124b68',
+              800: '#0f3d55', 900: '#092c3e'
+            },
             primary: {
-              50: '#eff6ff',
-              100: '#dbeafe',
-              500: '#3b82f6',
-              600: '#2563eb',
-              700: '#1d4ed8',
-              800: '#1e40af',
-              900: '#1e3a8a',
+              50: '#eff9fc',
+              100: '#d9f2fa',
+              500: '#438fb5',
+              600: '#266a94',
+              700: '#124b68',
+              800: '#0f3d55',
+              900: '#092c3e',
+            },
+            mandeh: {
+              clouds: '#fffdf4', sky: '#b7e3f5', ocean: '#124b68',
+              blueberry: '#266a94', bluebird: '#438fb5', sun: '#f6c453', sunset: '#f38d3d'
             }
           }
         }
@@ -30,7 +48,7 @@
     }
   </script>
 </head>
-<body class="min-h-screen bg-slate-50 text-slate-800 flex flex-col antialiased selection:bg-blue-600 selection:text-white">
+<body class="min-h-screen bg-[#fffdf4] text-slate-800 flex flex-col antialiased selection:bg-[#266a94] selection:text-white">
 
   <!-- Toast Notification Container -->
   <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
@@ -39,18 +57,16 @@
   <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 via-indigo-600 to-sky-500 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-        </div>
+        <img class="mande-logo" src="assets/logo-mandeh.svg" alt="Logo Mandeh">
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="font-bold text-slate-900 text-lg tracking-tight">KKN Hub</h1>
-            <span class="text-[11px] font-semibold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
+            <h1 class="font-bold text-[#124b68] text-lg tracking-tight">KKN Hub</h1>
+            <span class="text-[11px] font-semibold bg-[#b7e3f5] text-[#124b68] px-2 py-0.5 rounded-full">
               Standalone App
             </span>
           </div>
           <p class="text-xs text-slate-500 font-medium">
-            <span class="kkn-group-text">Kelompok KKN 102</span> &bull; <span class="kkn-village-text">Desa Sukamaju</span>
+            <span class="kkn-group-text">KKN Rantak Pasisia</span> &bull; <span class="kkn-village-text">Mandeh Kabupaten, Pesisir Selatan, Sumatra Barat</span>
           </p>
         </div>
       </div>
@@ -109,7 +125,7 @@
     <!-- ========================================== -->
     <div id="tab-dashboard" class="tab-pane space-y-8">
       <!-- Welcome Hero Banner -->
-      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-700 via-indigo-700 to-sky-600 p-8 text-white shadow-xl shadow-blue-500/10">
+      <div class="relative overflow-hidden rounded-2xl mande-hero-gradient p-8 text-white shadow-xl shadow-[#124b68]/20">
         <div class="relative z-10 max-w-3xl space-y-3">
           <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/15 backdrop-blur-md text-blue-100 border border-white/20">
             ★ Portal Kerja Mandiri Mahasiswa KKN
@@ -122,10 +138,13 @@
           </p>
           <div class="flex flex-wrap items-center gap-4 pt-2 text-xs font-medium text-blue-200">
             <div class="flex items-center gap-1.5">
-              <span>📍 Lokasi: <strong class="kkn-village-text text-white">Desa Sukamaju</strong></span>
+              <span>📍 Lokasi: <strong class="kkn-village-text text-white">Mandeh Kabupaten, Pesisir Selatan, Sumatra Barat</strong></span>
             </div>
             <div class="flex items-center gap-1.5">
               <span>👥 Ketua: <strong class="kkn-leader-text text-white">Rizky Firmansyah</strong></span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span>🗓️ <strong class="kkn-period-text text-white">Periode II Juli - Agustus 2027</strong></span>
             </div>
             <div class="flex items-center gap-1.5">
               <span>🎓 DPL: <strong class="kkn-dpl-text text-white">Dr. Budi Santoso</strong></span>
@@ -279,7 +298,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label class="text-xs font-semibold text-slate-600 block mb-1">Nomor Surat</label>
-                <input type="text" id="letter-number" value="001/KKN-102/XI/2026" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono">
+                <input type="text" id="letter-number" value="001/KKN-RP/VII/2027" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono">
               </div>
               <div>
                 <label class="text-xs font-semibold text-slate-600 block mb-1">Lampiran</label>
@@ -287,7 +306,7 @@
               </div>
               <div>
                 <label class="text-xs font-semibold text-slate-600 block mb-1">Tanggal Surat</label>
-                <input type="text" id="letter-date" value="25 November 2026" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <input type="text" id="letter-date" value="Juli 2027" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
               </div>
             </div>
 
@@ -322,7 +341,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label class="text-xs font-semibold text-slate-600 block mb-1">Hari, Tanggal</label>
-                <input type="text" id="letter-event-date" value="Kamis, 28 November 2026" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <input type="text" id="letter-event-date" value="Juli - Agustus 2027" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
               </div>
               <div>
                 <label class="text-xs font-semibold text-slate-600 block mb-1">Waktu</label>
@@ -812,7 +831,12 @@ Tim Pelaksana KKN {kelompok}
 
             <div>
               <label class="font-semibold text-slate-700 block mb-1">Desa & Kecamatan Penempatan</label>
-              <input type="text" name="kkn_village" placeholder="Desa Sukamaju, Kec. Cilaku" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <input type="text" name="kkn_village" placeholder="Mandeh Kabupaten, Pesisir Selatan, Sumatra Barat" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">Periode KKN</label>
+              <input type="text" name="kkn_period" placeholder="Periode II Juli - Agustus 2027" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
             </div>
 
             <div>
@@ -845,7 +869,7 @@ Tim Pelaksana KKN {kelompok}
   <!-- FOOTER -->
   <footer class="border-t border-slate-200 bg-white py-6 mt-auto">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-      <p>&copy; 2026 KKN Hub &bull; Solusi Otomasi Surat, Email & Jadwal Kuliah Kerja Nyata.</p>
+      <p>&copy; 2027 KKN Rantak Pasisia &bull; Solusi Otomasi Surat, Email & Jadwal Kuliah Kerja Nyata.</p>
       <p>Murni HTML5, Tailwind CSS & JavaScript (Standalone Tanpa Instalasi Rumit).</p>
     </div>
   </footer>

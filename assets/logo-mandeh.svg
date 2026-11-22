@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" role="img" aria-labelledby="title desc">
+  <title id="title">Logo Mandeh</title>
+  <desc id="desc">Lingkaran biru dengan ombak putih dan matahari kuning-oranye</desc>
+  <defs><clipPath id="circle"><circle cx="110" cy="110" r="92"/></clipPath></defs>
+  <circle cx="110" cy="110" r="101" fill="#fffdf4"/>
+  <circle cx="110" cy="110" r="92" fill="#124b68"/>
+  <g clip-path="url(#circle)">
+    <path fill="#438fb5" d="M0 72h220v18H0zM0 143h220v15H0z" opacity=".65"/>
+    <path fill="#f6c453" d="M68 106c11-19 38-29 61-20 17 6 28 17 39 29-25-9-44-7-58 8-10 11-27 9-42-17z"/>
+    <path fill="#f38d3d" d="M68 106c18-12 43-15 63-5 10 5 18 12 25 20-21-7-38-5-51 7-10 9-24 1-37-22z"/>
+    <path fill="#fffdf4" d="M-8 116c33-26 62-25 86-15 18 8 34 23 61 25 26 2 48-10 70-28 6-5 11-3 9 6-19 30-48 45-80 43-30-2-48-19-72-25-23-6-44 0-66 15z"/>
+    <path fill="#fffdf4" d="M-11 145c31-18 57-19 82-10 26 10 43 30 76 28 31-2 54-17 78-39 5-5 10 0 7 7-21 34-52 54-88 55-34 0-54-22-80-31-22-8-44-5-69 7z"/>
+    <path fill="#fffdf4" d="M29 77c18-22 42-35 69-38 17-2 38 1 53 10 12 7 22 19 22 29 0 12-14 18-30 17-18-2-30-13-45-16-20-4-43 3-69 18z"/>
+    <path fill="#124b68" d="M111 75l10-25 8 25 25-14-9 24 25 3-23 10z"/>
+  </g>
+  <circle cx="110" cy="110" r="92" fill="none" stroke="#fffdf4" stroke-width="7"/>
+</svg>
