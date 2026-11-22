@@ -485,6 +485,16 @@ function initTeamAndProfile() {
   modal?.addEventListener("click", (event) => {
     if (event.target === modal) close.click();
   });
+
+  const fullscreenButton = document.getElementById("btn-team-fullscreen");
+  const teamTab = document.getElementById("tab-tim");
+  fullscreenButton?.addEventListener("click", async () => {
+    if (!document.fullscreenElement) {
+      await teamTab?.requestFullscreen?.();
+    } else {
+      await document.exitFullscreen?.();
+    }
+  });
 }
 
 // 4. TAB NAVIGATION

@@ -879,9 +879,14 @@ Tim Pelaksana KKN {kelompok}
           <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Struktur Tim</h2>
           <p class="text-sm text-slate-500 mt-1">Susunan pengurus dan koordinator bidang berdasarkan profil tim KKN.</p>
         </div>
-        <label for="profile-pdf-input-tab" class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#124b68] px-4 py-2.5 text-sm font-bold text-white shadow-md transition hover:bg-[#0f3d55]">
-          <span>▣</span><span>Scan Profile PDF</span>
-        </label>
+        <div class="flex flex-wrap gap-2">
+          <button id="btn-team-fullscreen" type="button" class="inline-flex items-center justify-center gap-2 rounded-xl border border-[#438fb5] px-4 py-2.5 text-sm font-bold text-[#266a94] transition hover:bg-[#eff9fc]">
+            <span>⛶</span><span>Tampilan Penuh</span>
+          </button>
+          <label for="profile-pdf-input-tab" class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#124b68] px-4 py-2.5 text-sm font-bold text-white shadow-md transition hover:bg-[#0f3d55]">
+            <span>▣</span><span>Scan Profile PDF</span>
+          </label>
+        </div>
         <input id="profile-pdf-input-tab" type="file" accept="application/pdf" class="hidden">
       </div>
       <div id="team-structure-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
