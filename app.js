@@ -31,6 +31,7 @@ const TEAM_MEMBERS = [
   { name: "M. Fayyadh Muslih", study: "TRI 2024", role: "KORMATER SAINTEK", tone: "bg-cyan-700" },
   { name: "Farid Ali Fitriansyah", study: "BPW 2024", role: "KORMATER SOSHUM", tone: "bg-violet-700" }
 ];
+const TEAM_PHOTOS_KEY = "kkn_team_photos";
 
 const DEFAULT_LINKS = [
   {
@@ -408,18 +409,50 @@ function initializeAppAfterAuth() {
 function initTeamAndProfile() {
   const grid = document.getElementById("team-structure-grid");
   if (grid) {
-    grid.innerHTML = TEAM_MEMBERS.map((member, index) => `
-      <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-[#8bcce5] hover:shadow-md">
-        <div class="flex items-start gap-4">
-          <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${member.tone} text-lg font-extrabold text-white shadow-sm">${index + 1}</div>
-          <div class="min-w-0">
-            <h3 class="font-bold text-slate-900">${member.name}</h3>
+    const photos = getStorage(TEAM_PHOTOS_KEY, {});
+    const memberCard = (member, index, extraClass = "") => {
+      const photo = photos[index];
+      const avatar = photo
+        ? `<img src="${photo}" alt="Foto ${member.name}" class="h-full w-full object-cover">`
+        : `<span class="text-xl font-extrabold text-white">${member.name.split(" ").map((word) => word[0]).slice(0, 2).join("")}</span>`;
+      return `
+        <article class="team-person-card ${extraClass}">
+          <div class="team-person-photo ${member.tone}">${avatar}</div>
+          <div class="min-w-0 flex-1">
+            <h3 class="font-bold leading-tight text-slate-900">${member.name}</h3>
             <p class="mt-0.5 text-xs text-slate-500">${member.study}</p>
-            <span class="mt-3 inline-flex rounded-full bg-[#eff9fc] px-2.5 py-1 text-[11px] font-bold tracking-wide text-[#266a94]">${member.role}</span>
+            <span class="mt-2 inline-flex rounded-full bg-[#eff9fc] px-2 py-1 text-[10px] font-bold tracking-wide text-[#266a94]">${member.role}</span>
+            <label class="mt-2 block cursor-pointer text-[10px] font-semibold text-[#438fb5] hover:text-[#124b68]">
+              <input type="file" accept="image/*" class="team-photo-input hidden" data-team-index="${index}">
+              ${photo ? "Ganti foto" : "Masukkan foto"}
+            </label>
           </div>
+        </article>`;
+    };
+    grid.innerHTML = `
+      <div class="team-tree">
+        <div class="team-tree-root">${memberCard(TEAM_MEMBERS[0], 0, "team-person-card-lead")}</div>
+        <div class="team-tree-connector"></div>
+        <div class="team-tree-branches">
+          <section class="team-tree-branch"><h3>Pengurus Inti</h3><div class="team-tree-branch-cards">${memberCard(TEAM_MEMBERS[1], 1)}${memberCard(TEAM_MEMBERS[2], 2)}</div></section>
+          <section class="team-tree-branch"><h3>Koordinator Lapangan</h3><div class="team-tree-branch-cards">${memberCard(TEAM_MEMBERS[3], 3)}${memberCard(TEAM_MEMBERS[4], 4)}</div></section>
+          <section class="team-tree-branch team-tree-branch-wide"><h3>Koordinator Materi</h3><div class="team-tree-branch-cards">${TEAM_MEMBERS.slice(5).map((member, index) => memberCard(member, index + 5)).join("")}</div></section>
         </div>
-      </article>
-    `).join("");
+      </div>`;
+
+    grid.querySelectorAll(".team-photo-input").forEach((input) => input.addEventListener("change", (event) => {
+      const file = event.target.files?.[0];
+      const index = event.target.dataset.teamIndex;
+      if (!file || !file.type.startsWith("image/")) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const updatedPhotos = getStorage(TEAM_PHOTOS_KEY, {});
+        updatedPhotos[index] = reader.result;
+        setStorage(TEAM_PHOTOS_KEY, updatedPhotos);
+        initTeamAndProfile();
+      };
+      reader.readAsDataURL(file);
+    }));
   }
 
   const modal = document.getElementById("profile-pdf-modal");

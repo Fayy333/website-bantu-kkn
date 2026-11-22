@@ -21,6 +21,23 @@
   background-size: cover;
   background-repeat: no-repeat;
 }
+
+.team-tree { position: relative; padding: 0.75rem 0 1rem; }
+.team-tree-root { display: flex; justify-content: center; position: relative; z-index: 2; }
+.team-tree-root .team-person-card { max-width: 420px; width: 100%; border-color: #f6c453; box-shadow: 0 12px 24px rgba(18, 75, 104, .12); }
+.team-tree-connector { width: 2px; height: 2rem; margin: 0 auto; background: #438fb5; position: relative; }
+.team-tree-branches { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; position: relative; }
+.team-tree-branches::before { content: ''; position: absolute; top: 0; left: 25%; right: 25%; height: 2px; background: #438fb5; }
+.team-tree-branch { position: relative; padding-top: 1rem; }
+.team-tree-branch::before { content: ''; position: absolute; top: 0; left: 50%; width: 2px; height: 1rem; background: #438fb5; }
+.team-tree-branch h3 { margin-bottom: .65rem; text-align: center; color: var(--mande-deep-ocean); font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+.team-tree-branch-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
+.team-tree-branch-wide { grid-column: 1 / -1; }
+.team-tree-branch-wide .team-tree-branch-cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.team-person-card { display: flex; align-items: center; gap: .75rem; min-width: 0; border: 1px solid #dbe5eb; border-radius: 1rem; background: #fff; padding: .75rem; box-shadow: 0 4px 12px rgba(15, 61, 85, .06); }
+.team-person-photo { width: 3.5rem; height: 3.5rem; flex: 0 0 auto; overflow: hidden; display: flex; align-items: center; justify-content: center; border-radius: 999px; border: 3px solid #fff; box-shadow: 0 0 0 2px #438fb5; }
+.team-person-card-lead .team-person-photo { width: 4.5rem; height: 4.5rem; box-shadow: 0 0 0 3px #f6c453; }
+
 body {
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--mande-clouds);
@@ -66,6 +83,11 @@ body.auth-locked > footer { display: none; }
   #add-link-modal .grid-cols-2, #add-schedule-modal .grid-cols-2 { grid-template-columns: minmax(0, 1fr) !important; }
   #tab-jadwal .grid-cols-2 { grid-template-columns: minmax(0, 1fr) !important; }
   footer { text-align: center; }
+  .team-tree-branches { grid-template-columns: minmax(0, 1fr); }
+  .team-tree-branches::before { left: 50%; right: auto; }
+  .team-tree-branch-wide { grid-column: auto; }
+  .team-tree-branch-wide .team-tree-branch-cards { grid-template-columns: minmax(0, 1fr); }
+  .team-tree-branch-cards { grid-template-columns: minmax(0, 1fr); }
 }
 
 .font-serif-doc {
