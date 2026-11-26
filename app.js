@@ -996,7 +996,7 @@ async function getAssetDataUrl(path) {
 }
 
 // Download PDF directly in the browser
-function downloadPdfDocument() {
+async function downloadPdfDocument() {
   const letterPreview = document.getElementById("print-area");
   if (!letterPreview) return;
 
@@ -1019,12 +1019,27 @@ function downloadPdfDocument() {
     pagebreak: { mode: ["css", "legacy"] }
   };
 
-  html2pdf()
-    .set(pdfOptions)
-    .from(letterPreview)
-    .save()
-    .then(() => showToast("Surat PDF berhasil diunduh!"))
-    .catch(() => showToast("PDF gagal dibuat. Silakan coba lagi."));
+  const exportArea = letterPreview.cloneNode(true);
+  exportArea.style.width = `${letterPreview.getBoundingClientRect().width}px`;
+  exportArea.style.position = "absolute";
+  exportArea.style.left = "-100000px";
+  exportArea.style.top = "0";
+  exportArea.style.background = "#ffffff";
+  document.body.appendChild(exportArea);
+
+  try {
+    await Promise.all([...exportArea.querySelectorAll("img")].map(async (image) => {
+      const source = image.getAttribute("src") || "";
+      if (!source || source.startsWith("data:")) return;
+      image.src = await getAssetDataUrl(source.split("?")[0]);
+    }));
+    await html2pdf().set(pdfOptions).from(exportArea).save();
+    showToast("Surat PDF berhasil diunduh!");
+  } catch {
+    showToast("PDF gagal dibuat. Silakan coba lagi.");
+  } finally {
+    exportArea.remove();
+  }
 }
 
 // 7. OTOMASI EMAIL & BROADCAST
