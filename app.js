@@ -828,8 +828,8 @@ async function downloadWordDocument() {
   const secondPageEnabled = document.getElementById("letter-second-page-enabled")?.checked === true;
   const secondPageTitle = document.getElementById("letter-second-page-title")?.value || "Lampiran Rencana Kegiatan KKN";
   const [ugmLogo, kknLogo] = await Promise.all([
-    getAssetDataUrl("assets/logo-ugm-template.png"),
-    getAssetDataUrl("assets/logo-kkn-template.png")
+    getAssetDataUrl("assets/logo-ugm-template.gif?v=full-3"),
+    getAssetDataUrl("assets/logo-mandeh.svg?v=full-3")
   ]);
 
   const wordHtml = `
