@@ -79,7 +79,7 @@ body.auth-locked > footer { display: none; }
   #tab-surat > div:first-child > .flex button { flex: 1; justify-content: center; padding-left: 0.55rem !important; padding-right: 0.55rem !important; font-size: 0.72rem !important; }
 
   #print-area { overflow-x: auto; margin-left: -0.25rem; margin-right: -0.25rem; padding: 0.25rem; }
-  #a4-letter-preview { min-height: 0; padding: 1rem !important; border-radius: 0.75rem !important; font-size: 10px !important; line-height: 1.45 !important; }
+  #a4-letter-preview { min-height: 297mm; padding: 25mm 20mm 20mm 30mm !important; border-radius: 0 !important; font-size: 12pt !important; line-height: 1.15 !important; }
   #a4-letter-preview .grid-cols-2 { gap: 0.5rem !important; }
   #a4-letter-preview .mt-8 { margin-top: 1.5rem !important; }
 
@@ -141,8 +141,44 @@ body.auth-locked > footer { display: none; }
   background-color: #ffffff;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   border: 1px solid #e2e8f0;
-  min-height: 842px;
+  width: 210mm;
+  min-height: 297mm;
+  box-sizing: border-box;
+  padding: 25mm 20mm 20mm 30mm;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 12pt;
+  line-height: 1.15;
   position: relative;
+}
+
+.letterhead {
+  border-bottom: 3px double #000;
+}
+
+.letter-second-page {
+  width: 210mm;
+  min-height: 297mm;
+  box-sizing: border-box;
+  padding: 25mm 20mm 20mm 30mm;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  page-break-before: always;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 12pt;
+  line-height: 1.15;
+}
+
+.letter-attachment-table th,
+.letter-attachment-table td {
+  border: 1px solid #000;
+  padding: 6px;
+  vertical-align: top;
+}
+
+.letter-attachment-table th {
+  text-align: center;
+  font-weight: 700;
 }
 
 /* Print styling saat dicetak */
@@ -159,7 +195,7 @@ body.auth-locked > footer { display: none; }
     top: 0;
     width: 100%;
     margin: 0;
-    padding: 20mm;
+    padding: 25mm 20mm 20mm 30mm;
     box-shadow: none;
     border: none;
   }

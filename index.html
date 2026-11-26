@@ -115,7 +115,7 @@
 
       <!-- Quick status & Profile -->
       <div class="flex items-center gap-3">
-        <button id="cloud-auth-button" hidden class="flex items-center gap-2 px-3 py-1 bg-slate-100 rounded-full text-xs font-medium text-slate-700 border border-slate-200 hover:bg-blue-50 hover:text-blue-700 transition">
+        <button id="cloud-auth-button" hidden style="display:none" class="flex items-center gap-2 px-3 py-1 bg-slate-100 rounded-full text-xs font-medium text-slate-700 border border-slate-200 hover:bg-blue-50 hover:text-blue-700 transition">
           <span class="w-2 h-2 rounded-full bg-amber-400"></span>
           <span>Login Cloud</span>
         </button>
@@ -382,15 +382,21 @@
 
           <!-- Penerima -->
           <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
-            <h3 class="font-bold text-slate-800 text-sm border-b pb-2">Ditujukan Kepada (Penerima)</h3>
+            <div class="flex items-center justify-between border-b pb-2">
+              <h3 class="font-bold text-slate-800 text-sm">Ditujukan Kepada (Penerima)</h3>
+              <label class="inline-flex items-center gap-2 text-xs font-semibold text-slate-600">
+                <input id="letter-show-recipient" type="checkbox" checked class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                Tampilkan Kepada Yth.
+              </label>
+            </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="text-xs font-semibold text-slate-600 block mb-1">Nama / Panggilan</label>
-                <input type="text" id="letter-recipient-name" value="Bapak H. Mulyadi (Kepala Desa)" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <input type="text" id="letter-recipient-name" value="Kepala BAPPEDALITBANG Kabupaten Pesisir Selatan" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
               </div>
               <div>
                 <label class="text-xs font-semibold text-slate-600 block mb-1">Instansi / Alamat Kantor</label>
-                <input type="text" id="letter-recipient-title" value="Kantor Balai Desa Sukamaju" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <input type="text" id="letter-recipient-title" value="BAPPEDALITBANG Kabupaten Pesisir Selatan" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
               </div>
             </div>
           </div>
@@ -400,21 +406,56 @@
             <h3 class="font-bold text-slate-800 text-sm border-b pb-2">Detail Acara / Agenda Kegiatan</h3>
             <div>
               <label class="text-xs font-semibold text-slate-600 block mb-1">Nama Kegiatan</label>
-              <input type="text" id="letter-event-name" value="Lokakarya Awal & Silaturahmi Tim KKN dengan Perangkat Desa" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-semibold">
+                <input type="text" id="letter-event-name" value="Pelaksanaan Kuliah Kerja Nyata (KKN)" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-semibold">
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label class="text-xs font-semibold text-slate-600 block mb-1">Hari, Tanggal</label>
-                <input type="text" id="letter-event-date" value="Juli - Agustus 2027" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <input type="text" id="letter-event-date" value="Juli - Agustus 2026" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
               </div>
               <div>
                 <label class="text-xs font-semibold text-slate-600 block mb-1">Waktu</label>
-                <input type="text" id="letter-event-time" value="09.00 WIB s/d Selesai" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <input type="text" id="letter-event-time" value="Sesuai jadwal pelaksanaan KKN" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
               </div>
               <div>
                 <label class="text-xs font-semibold text-slate-600 block mb-1">Tempat</label>
-                <input type="text" id="letter-event-location" value="Aula Pertemuan Balai Desa" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <input type="text" id="letter-event-location" value="Wilayah penempatan KKN" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
               </div>
+            </div>
+          </div>
+
+          <!-- Penandatangan -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="font-bold text-slate-800 text-sm border-b pb-2">Tanda Tangan & Jabatan</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <p class="text-xs font-bold text-slate-600">Sekretaris</p>
+                <input type="text" id="letter-secretary-name" placeholder="Nama sekretaris" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <input type="text" id="letter-secretary-role" placeholder="Jabatan sekretaris" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <label class="block text-xs text-slate-500">Tanda tangan otomatis (opsional)<input type="file" id="letter-secretary-signature" accept="image/png,image/jpeg" class="mt-1 block w-full text-xs"></label>
+              </div>
+              <div class="space-y-2">
+                <p class="text-xs font-bold text-slate-600">Ketua</p>
+                <input type="text" id="letter-leader-name" placeholder="Nama ketua" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <input type="text" id="letter-leader-role" placeholder="Jabatan ketua" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <label class="block text-xs text-slate-500">Tanda tangan otomatis (opsional)<input type="file" id="letter-leader-signature" accept="image/png,image/jpeg" class="mt-1 block w-full text-xs"></label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lembar Kedua -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+            <div class="flex items-center justify-between border-b pb-2">
+              <h3 class="font-bold text-slate-800 text-sm">Lembar Kedua - Tabel Lampiran</h3>
+              <label class="inline-flex items-center gap-2 text-xs font-semibold text-slate-600">
+                <input id="letter-second-page-enabled" type="checkbox" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                Tambahkan lembar kedua
+              </label>
+            </div>
+            <div id="letter-second-page-editor" class="hidden space-y-3">
+              <input type="text" id="letter-second-page-title" value="Lampiran Rencana Kegiatan KKN" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-semibold">
+              <div id="letter-table-rows" class="space-y-2"></div>
+              <button type="button" id="btn-add-letter-row" class="px-3 py-2 rounded-lg border border-blue-200 text-blue-700 text-xs font-bold hover:bg-blue-50">+ Tambah Baris</button>
             </div>
           </div>
 
@@ -442,22 +483,28 @@
           </div>
 
           <div id="print-area">
-            <div id="a4-letter-preview" class="a4-paper p-6 sm:p-8 rounded-xl font-serif text-[12px] leading-relaxed text-slate-900 space-y-3">
+            <div id="a4-letter-preview" class="a4-paper letter-paper text-slate-900 space-y-3">
               <!-- Kop Surat -->
-              <div class="text-center pb-2 border-b-2 border-black space-y-0.5">
-                <p class="font-bold text-[13px] tracking-wide uppercase">
-                  KULIAH KERJA NYATA (KKN) <span class="kkn-univ-text">UNIVERSITAS</span>
-                </p>
-                <p class="font-bold text-[12px] uppercase">
-                  <span class="kkn-group-text">KELOMPOK KKN 102</span> - <span class="kkn-village-text">DESA SUKAMAJU</span>
-                </p>
-                <p class="text-[10px] italic font-sans text-slate-600">
-                  Sekretariat / Posko: <span class="kkn-village-text">Desa Sukamaju</span> &bull; Email: kkn.official@univ.ac.id
-                </p>
+              <div class="letterhead flex items-center justify-between pb-2">
+                <img src="assets/logo-ugm-template.png" alt="Logo UGM" class="h-16 w-16 object-contain shrink-0">
+                <div class="text-center space-y-0.5 px-2">
+                  <p class="font-bold text-[13px] tracking-wide uppercase">
+                    KULIAH KERJA NYATA - PEMBELAJARAN<br>PEMBERDAYAAN MASYARAKAT
+                  </p>
+                  <p class="font-bold text-[12px] uppercase">
+                    <span class="kkn-univ-text">UNIVERSITAS GADJAH MADA</span>
+                  </p>
+                  <p class="font-bold text-[11px] uppercase">
+                    PESISIR SELATAN PERIODE II TAHUN 2026
+                  </p>
+                  <p class="text-[9px] text-slate-600">Sekretariat / Posko: <span class="kkn-village-text">Desa Sukamaju</span></p>
+                  <p class="text-[9px] text-slate-600">Instagram: @menorehmandeh &bull; Email: menorehmandeh@gmail.com</p>
+                </div>
+                <img src="assets/logo-kkn-template.png" alt="Logo KKN" class="h-16 w-16 object-contain shrink-0">
               </div>
 
               <!-- Nomor & Tanggal -->
-              <div class="flex justify-between items-start pt-1 text-[11px] font-sans">
+              <div class="flex justify-between items-start pt-1 text-[12px]">
                 <div class="space-y-0.5">
                   <p>Nomor &nbsp; : <span id="prev-letter-number" class="font-mono">001/KKN/XI/2026</span></p>
                   <p>Lampiran : <span id="prev-letter-attachment">-</span></p>
@@ -469,7 +516,7 @@
               </div>
 
               <!-- Penerima -->
-              <div class="pt-2 text-[11px] font-sans">
+              <div id="letter-recipient-block" class="pt-2 text-[12px]">
                 <p>Kepada Yth.</p>
                 <p id="prev-recipient-name" class="font-bold">Bapak H. Mulyadi (Kepala Desa)</p>
                 <p id="prev-recipient-title">Kantor Balai Desa Sukamaju</p>
@@ -477,11 +524,11 @@
               </div>
 
               <!-- Isi Surat -->
-              <div class="pt-2 space-y-2 text-[11px] font-sans text-justify">
+              <div class="pt-2 space-y-2 text-[12px] text-justify">
                 <p>Dengan hormat,</p>
                 <p id="prev-letter-opening">Sehubungan dengan pelaksanaan program Kuliah Kerja Nyata...</p>
 
-                <div class="pl-4 space-y-1 font-mono text-[10.5px]">
+                <div class="pl-4 space-y-1 text-[12px]">
                   <p>Hari, Tanggal : <span id="prev-event-date" class="font-bold">Kamis, 28 November 2026</span></p>
                   <p>Waktu &nbsp; &nbsp; &nbsp; &nbsp; : <span id="prev-event-time">09.00 WIB s/d Selesai</span></p>
                   <p>Tempat &nbsp; &nbsp; &nbsp; : <span id="prev-event-location">Aula Pertemuan Balai Desa</span></p>
@@ -492,23 +539,50 @@
               </div>
 
               <!-- Tanda Tangan -->
-              <div class="pt-4 text-center font-sans text-[11px]">
+              <div class="pt-4 text-center text-[12px]">
                 <p>Hormat kami,</p>
                 <p class="font-semibold">Panitia Pelaksana KKN <span class="kkn-group-text">Kelompok KKN 102</span></p>
 
                 <div class="grid grid-cols-2 gap-4 mt-8">
                   <div>
-                    <p class="text-slate-400 text-[10px] mb-6">[Tanda Tangan]</p>
-                    <p class="font-bold underline"><span class="kkn-secretary-text">Annisa Rahmawati</span></p>
-                    <p class="text-[10px] text-slate-500">Sekretaris KKN</p>
+                    <div class="h-16 mb-2 flex items-end justify-center"><img id="prev-letter-secretary-signature" class="max-h-16 max-w-28 object-contain hidden" alt="Tanda tangan sekretaris"></div>
+                    <p id="prev-letter-secretary-name" class="font-bold underline">Annisa Rahmawati</p>
+                    <p id="prev-letter-secretary-role" class="text-[10px] text-slate-500">Sekretaris KKN</p>
                   </div>
                   <div>
-                    <p class="text-slate-400 text-[10px] mb-6">[Tanda Tangan]</p>
-                    <p class="font-bold underline"><span class="kkn-leader-text">Rizky Firmansyah</span></p>
-                    <p class="text-[10px] text-slate-500">Ketua Kelompok KKN</p>
+                    <div class="h-16 mb-2 flex items-end justify-center"><img id="prev-letter-leader-signature" class="max-h-16 max-w-28 object-contain hidden" alt="Tanda tangan ketua"></div>
+                    <p id="prev-letter-leader-name" class="font-bold underline">Rizky Firmansyah</p>
+                    <p id="prev-letter-leader-role" class="text-[10px] text-slate-500">Ketua Kelompok KKN</p>
                   </div>
                 </div>
               </div>
+            </div>
+            <div id="letter-second-page" class="letter-second-page hidden mt-8">
+              <!-- Kop surat lembar kedua mengikuti template utama -->
+              <div class="letterhead flex items-center justify-between pb-2">
+                <img src="assets/logo-ugm-template.png" alt="Logo UGM" class="h-16 w-16 object-contain shrink-0">
+                <div class="text-center space-y-0.5 px-2">
+                  <p class="font-bold text-[13px] tracking-wide uppercase">
+                    KULIAH KERJA NYATA - PEMBELAJARAN<br>PEMBERDAYAAN MASYARAKAT
+                  </p>
+                  <p class="font-bold text-[12px] uppercase">
+                    <span class="kkn-univ-text">UNIVERSITAS GADJAH MADA</span>
+                  </p>
+                  <p class="font-bold text-[11px] uppercase">
+                    PESISIR SELATAN PERIODE II TAHUN 2026
+                  </p>
+                  <p class="text-[9px] text-slate-600">Sekretariat / Posko: <span class="kkn-village-text">Desa Sukamaju</span></p>
+                  <p class="text-[9px] text-slate-600">Instagram: @menorehmandeh &bull; Email: menorehmandeh@gmail.com</p>
+                </div>
+                <img src="assets/logo-kkn-template.png" alt="Logo KKN" class="h-16 w-16 object-contain shrink-0">
+              </div>
+              <div class="text-center mt-5 mb-6">
+                <h3 id="prev-letter-second-page-title" class="font-bold text-[14px] uppercase">Lampiran Rencana Kegiatan KKN</h3>
+              </div>
+              <table class="letter-attachment-table w-full border-collapse text-[12px]">
+                <thead><tr><th>No.</th><th>Kegiatan</th><th>Waktu</th><th>Tempat</th><th>Keterangan</th></tr></thead>
+                <tbody id="prev-letter-table-body"></tbody>
+              </table>
             </div>
           </div>
 

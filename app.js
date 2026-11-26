@@ -122,6 +122,19 @@ const DEFAULT_SCHEDULES = [
 
 const LETTER_TEMPLATES = [
   {
+    id: "izin-bappedalitbang",
+    name: "Surat Permohonan Izin KKN - BAPPEDALITBANG",
+    regarding: "Permohonan Izin Pelaksanaan Kuliah Kerja Nyata (KKN)",
+    defaultRecipientName: "Kepala BAPPEDALITBANG Kabupaten Pesisir Selatan",
+    defaultRecipientTitle: "BAPPEDALITBANG Kabupaten Pesisir Selatan",
+    defaultEventName: "Pelaksanaan Kuliah Kerja Nyata (KKN)",
+    defaultEventDate: "{periode}",
+    defaultEventTime: "Sesuai jadwal pelaksanaan KKN",
+    defaultEventLocation: "Wilayah {desa}",
+    openingText: "Sehubungan dengan akan dilaksanakannya kegiatan Kuliah Kerja Nyata (KKN) oleh mahasiswa {universitas} di wilayah {desa}, kami bermaksud memohon izin dan dukungan untuk melaksanakan kegiatan tersebut sesuai dengan program kerja yang telah disusun.",
+    closingText: "Demikian surat permohonan izin ini kami sampaikan. Besar harapan kami agar permohonan ini dapat disetujui. Atas perhatian, izin, dan kerja sama yang diberikan, kami ucapkan terima kasih."
+  },
+  {
     id: "undangan-lokakarya",
     name: "Surat Undangan Lokakarya / Rapat Koordinasi Desa",
     regarding: "Undangan Lokakarya Awal Program Kerja KKN",
@@ -162,6 +175,14 @@ const LETTER_TEMPLATES = [
     defaultEventName: "Rangkaian Festival Anak Sholeh & Penutupan Bimbingan Belajar Desa"
   }
 ];
+
+const LETTER_SIGNERS_KEY = "kkn_letter_signers";
+const LETTER_SIGNATURES_KEY = "kkn_letter_signatures";
+const DEFAULT_LETTER_TABLE_ROWS = [
+  { no: "1", activity: "", time: "", location: "", notes: "" }
+];
+let letterTableRows = DEFAULT_LETTER_TABLE_ROWS.map((row) => ({ ...row }));
+let letterSignatureImages = {};
 
 const EMAIL_TEMPLATES = [
   {
@@ -475,14 +496,31 @@ function initLetterGenerator() {
     tplSelect.addEventListener("change", (e) => {
       const found = LETTER_TEMPLATES.find((t) => t.id === e.target.value);
       if (found) {
+        const settings = getStorage(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
+        const replacePlaceholders = (text) => (text || "")
+          .replaceAll("{universitas}", settings.kkn_university || "universitas")
+          .replaceAll("{desa}", settings.kkn_village || "desa")
+          .replaceAll("{periode}", settings.kkn_period || "periode KKN");
         document.getElementById("letter-regarding").value = found.regarding;
-        document.getElementById("letter-opening").value = found.openingText;
-        document.getElementById("letter-closing").value = found.closingText;
+        document.getElementById("letter-recipient-name").value = found.defaultRecipientName || "Bapak/Ibu yang kami hormati";
+        document.getElementById("letter-recipient-title").value = found.defaultRecipientTitle || "Di tempat";
+        document.getElementById("letter-opening").value = replacePlaceholders(found.openingText);
+        document.getElementById("letter-closing").value = replacePlaceholders(found.closingText);
         document.getElementById("letter-event-name").value = found.defaultEventName;
+        if (found.defaultEventDate) document.getElementById("letter-event-date").value = replacePlaceholders(found.defaultEventDate);
+        if (found.defaultEventTime) document.getElementById("letter-event-time").value = replacePlaceholders(found.defaultEventTime);
+        if (found.defaultEventLocation) document.getElementById("letter-event-location").value = replacePlaceholders(found.defaultEventLocation);
         updateLetterPreview();
       }
     });
+
+    tplSelect.value = "izin-bappedalitbang";
+    tplSelect.dispatchEvent(new Event("change"));
   }
+
+  initLetterSignerFields();
+  initLetterSecondPage();
+  document.getElementById("letter-show-recipient")?.addEventListener("change", updateLetterPreview);
 
   // Bind input listeners for live preview
   [
@@ -497,10 +535,18 @@ function initLetterGenerator() {
     "letter-event-time",
     "letter-event-location",
     "letter-opening",
-    "letter-closing"
+    "letter-closing",
+    "letter-secretary-name",
+    "letter-secretary-role",
+    "letter-leader-name",
+    "letter-leader-role",
+    "letter-second-page-title"
   ].forEach((id) => {
     const el = document.getElementById(id);
-    if (el) el.addEventListener("input", updateLetterPreview);
+    if (el) el.addEventListener("input", () => {
+      if (id.includes("secretary") || id.includes("leader")) saveLetterSignerFields();
+      updateLetterPreview();
+    });
   });
 
   // Download buttons
@@ -511,6 +557,114 @@ function initLetterGenerator() {
   if (btnPdf) btnPdf.addEventListener("click", downloadPdfDocument);
 
   renderLetterHistory();
+  updateLetterPreview();
+}
+
+function initLetterSignerFields() {
+  const settings = getStorage(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
+  const signers = getStorage(LETTER_SIGNERS_KEY, {
+    secretaryName: settings.kkn_secretary_name || "Sekretaris KKN",
+    secretaryRole: "Sekretaris KKN",
+    leaderName: settings.kkn_leader_name || "Ketua Kelompok KKN",
+    leaderRole: "Ketua Kelompok KKN"
+  });
+  const values = {
+    "letter-secretary-name": signers.secretaryName,
+    "letter-secretary-role": signers.secretaryRole,
+    "letter-leader-name": signers.leaderName,
+    "letter-leader-role": signers.leaderRole
+  };
+  Object.entries(values).forEach(([id, value]) => {
+    const input = document.getElementById(id);
+    if (input) input.value = value || "";
+  });
+
+  letterSignatureImages = getStorage(LETTER_SIGNATURES_KEY, {});
+  ["secretary", "leader"].forEach((role) => {
+    const input = document.getElementById(`letter-${role}-signature`);
+    input?.addEventListener("change", () => handleSignatureUpload(role, input.files?.[0]));
+  });
+}
+
+function saveLetterSignerFields() {
+  setStorage(LETTER_SIGNERS_KEY, {
+    secretaryName: document.getElementById("letter-secretary-name")?.value || "",
+    secretaryRole: document.getElementById("letter-secretary-role")?.value || "",
+    leaderName: document.getElementById("letter-leader-name")?.value || "",
+    leaderRole: document.getElementById("letter-leader-role")?.value || ""
+  });
+}
+
+function handleSignatureUpload(role, file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    letterSignatureImages[role] = reader.result;
+    setStorage(LETTER_SIGNATURES_KEY, letterSignatureImages);
+    updateLetterPreview();
+  };
+  reader.readAsDataURL(file);
+}
+
+function initLetterSecondPage() {
+  const checkbox = document.getElementById("letter-second-page-enabled");
+  const editor = document.getElementById("letter-second-page-editor");
+  const addButton = document.getElementById("btn-add-letter-row");
+  letterTableRows = getStorage("kkn_letter_table_rows", DEFAULT_LETTER_TABLE_ROWS).map((row, index) => ({
+    no: row.no || String(index + 1),
+    activity: row.activity || "",
+    time: row.time || "",
+    location: row.location || "",
+    notes: row.notes || ""
+  }));
+  renderLetterTableEditor();
+
+  checkbox?.addEventListener("change", () => {
+    editor?.classList.toggle("hidden", !checkbox.checked);
+    updateLetterPreview();
+  });
+  addButton?.addEventListener("click", () => {
+    letterTableRows.push({ no: String(letterTableRows.length + 1), activity: "", time: "", location: "", notes: "" });
+    renderLetterTableEditor();
+    updateLetterPreview();
+  });
+}
+
+function renderLetterTableEditor() {
+  const container = document.getElementById("letter-table-rows");
+  if (!container) return;
+  container.innerHTML = letterTableRows.map((row, index) => `
+    <div class="grid grid-cols-1 sm:grid-cols-[0.5fr_2fr_1.5fr_1.5fr_1.5fr_auto] gap-2 items-start border border-slate-200 rounded-lg p-2" data-letter-row="${index}">
+      <input data-letter-cell="no" value="${escapeHtml(row.no)}" placeholder="No." class="w-full px-2 py-1.5 text-xs border rounded">
+      <input data-letter-cell="activity" value="${escapeHtml(row.activity)}" placeholder="Kegiatan" class="w-full px-2 py-1.5 text-xs border rounded">
+      <input data-letter-cell="time" value="${escapeHtml(row.time)}" placeholder="Waktu" class="w-full px-2 py-1.5 text-xs border rounded">
+      <input data-letter-cell="location" value="${escapeHtml(row.location)}" placeholder="Tempat" class="w-full px-2 py-1.5 text-xs border rounded">
+      <input data-letter-cell="notes" value="${escapeHtml(row.notes)}" placeholder="Keterangan" class="w-full px-2 py-1.5 text-xs border rounded">
+      <button type="button" data-remove-letter-row class="px-2 py-1.5 text-xs text-rose-600 border border-rose-200 rounded hover:bg-rose-50">Hapus</button>
+    </div>
+  `).join("");
+
+  container.querySelectorAll("[data-letter-row]").forEach((rowElement) => {
+    const index = Number(rowElement.dataset.letterRow);
+    rowElement.querySelectorAll("[data-letter-cell]").forEach((input) => {
+      input.addEventListener("input", () => {
+        letterTableRows[index][input.dataset.letterCell] = input.value;
+        setStorage("kkn_letter_table_rows", letterTableRows);
+        updateLetterPreview();
+      });
+    });
+    rowElement.querySelector("[data-remove-letter-row]")?.addEventListener("click", () => {
+      letterTableRows.splice(index, 1);
+      letterTableRows.forEach((item, itemIndex) => { item.no = String(itemIndex + 1); });
+      setStorage("kkn_letter_table_rows", letterTableRows);
+      renderLetterTableEditor();
+      updateLetterPreview();
+    });
+  });
+}
+
+function escapeHtml(value) {
+  return String(value || "").replace(/[&<>\"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[char]));
 }
 
 function updateLetterPreview() {
@@ -528,6 +682,13 @@ function updateLetterPreview() {
   const eLoc = document.getElementById("letter-event-location")?.value || "Balai Desa";
   const op = document.getElementById("letter-opening")?.value || "";
   const cl = document.getElementById("letter-closing")?.value || "";
+  const showRecipient = document.getElementById("letter-show-recipient")?.checked !== false;
+  const secretaryName = document.getElementById("letter-secretary-name")?.value || settings.kkn_secretary_name || "Sekretaris KKN";
+  const secretaryRole = document.getElementById("letter-secretary-role")?.value || "Sekretaris KKN";
+  const leaderName = document.getElementById("letter-leader-name")?.value || settings.kkn_leader_name || "Ketua Kelompok KKN";
+  const leaderRole = document.getElementById("letter-leader-role")?.value || "Ketua Kelompok KKN";
+  const secondPageEnabled = document.getElementById("letter-second-page-enabled")?.checked === true;
+  const secondPageTitle = document.getElementById("letter-second-page-title")?.value || "Lampiran Rencana Kegiatan KKN";
 
   const city = (settings.kkn_village || "Desa").split(",")[0].trim();
 
@@ -549,6 +710,23 @@ function updateLetterPreview() {
 
   const elPrevRTitle = document.getElementById("prev-recipient-title");
   if (elPrevRTitle) elPrevRTitle.textContent = rTitle;
+  document.getElementById("letter-recipient-block")?.classList.toggle("hidden", !showRecipient);
+
+  document.getElementById("prev-letter-secretary-name")?.replaceChildren(document.createTextNode(secretaryName));
+  document.getElementById("prev-letter-secretary-role")?.replaceChildren(document.createTextNode(secretaryRole));
+  document.getElementById("prev-letter-leader-name")?.replaceChildren(document.createTextNode(leaderName));
+  document.getElementById("prev-letter-leader-role")?.replaceChildren(document.createTextNode(leaderRole));
+  [["secretary", "prev-letter-secretary-signature"], ["leader", "prev-letter-leader-signature"]].forEach(([role, id]) => {
+    const image = document.getElementById(id);
+    if (!image) return;
+    if (letterSignatureImages[role]) {
+      image.src = letterSignatureImages[role];
+      image.classList.remove("hidden");
+    } else {
+      image.removeAttribute("src");
+      image.classList.add("hidden");
+    }
+  });
 
   const elPrevOp = document.getElementById("prev-letter-opening");
   if (elPrevOp) elPrevOp.textContent = op;
@@ -567,6 +745,23 @@ function updateLetterPreview() {
 
   const elPrevCl = document.getElementById("prev-letter-closing");
   if (elPrevCl) elPrevCl.textContent = cl;
+
+  const secondPage = document.getElementById("letter-second-page");
+  secondPage?.classList.toggle("hidden", !secondPageEnabled);
+  const secondPageTitleElement = document.getElementById("prev-letter-second-page-title");
+  if (secondPageTitleElement) secondPageTitleElement.textContent = secondPageTitle;
+  const tableBody = document.getElementById("prev-letter-table-body");
+  if (tableBody) {
+    tableBody.innerHTML = letterTableRows.map((row) => `
+      <tr>
+        <td>${escapeHtml(row.no)}</td>
+        <td>${escapeHtml(row.activity)}</td>
+        <td>${escapeHtml(row.time)}</td>
+        <td>${escapeHtml(row.location)}</td>
+        <td>${escapeHtml(row.notes)}</td>
+      </tr>
+    `).join("");
+  }
 }
 
 function saveLetterHistoryRecord() {
@@ -610,7 +805,7 @@ function renderLetterHistory() {
 }
 
 // Download formatted Word (.doc / .docx compatible blob)
-function downloadWordDocument() {
+async function downloadWordDocument() {
   const settings = getStorage(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
   const city = (settings.kkn_village || "Desa").split(",")[0].trim();
   const num = document.getElementById("letter-number")?.value || "";
@@ -625,6 +820,17 @@ function downloadWordDocument() {
   const eLoc = document.getElementById("letter-event-location")?.value || "";
   const op = document.getElementById("letter-opening")?.value || "";
   const cl = document.getElementById("letter-closing")?.value || "";
+  const showRecipient = document.getElementById("letter-show-recipient")?.checked !== false;
+  const secretaryName = document.getElementById("letter-secretary-name")?.value || settings.kkn_secretary_name || "Sekretaris KKN";
+  const secretaryRole = document.getElementById("letter-secretary-role")?.value || "Sekretaris KKN";
+  const leaderName = document.getElementById("letter-leader-name")?.value || settings.kkn_leader_name || "Ketua Kelompok KKN";
+  const leaderRole = document.getElementById("letter-leader-role")?.value || "Ketua Kelompok KKN";
+  const secondPageEnabled = document.getElementById("letter-second-page-enabled")?.checked === true;
+  const secondPageTitle = document.getElementById("letter-second-page-title")?.value || "Lampiran Rencana Kegiatan KKN";
+  const [ugmLogo, kknLogo] = await Promise.all([
+    getAssetDataUrl("assets/logo-ugm-template.png"),
+    getAssetDataUrl("assets/logo-kkn-template.png")
+  ]);
 
   const wordHtml = `
     <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
@@ -632,25 +838,33 @@ function downloadWordDocument() {
       <meta charset='utf-8'>
       <title>${reg}</title>
       <style>
-        body { font-family: 'Calibri', 'Arial', sans-serif; font-size: 11pt; line-height: 1.4; color: #000; }
+        @page { size: A4 portrait; margin: 2.5cm 2cm 2cm 3cm; }
+        body { font-family: 'Times New Roman', Times, serif; font-size: 12pt; line-height: 1.15; color: #000; margin: 0; }
         .center { text-align: center; }
         .right { text-align: right; }
         .justify { text-align: justify; }
         .bold { font-weight: bold; }
-        .kop-title { font-size: 13pt; font-weight: bold; margin: 0; }
+        .kop-title { font-size: 14pt; font-weight: bold; margin: 0; }
         .kop-sub { font-size: 12pt; font-weight: bold; margin: 2pt 0; }
-        .kop-address { font-size: 9pt; font-style: italic; color: #444; margin: 0; }
-        hr { border: none; border-bottom: 2px solid #000; margin-top: 5px; margin-bottom: 15px; }
+        .kop-address { font-size: 9pt; color: #444; margin: 0; }
+        hr { border: none; border-bottom: 3px double #000; margin-top: 5px; margin-bottom: 15px; }
         table { width: 100%; border-collapse: collapse; margin: 8pt 0; }
         td { vertical-align: top; padding: 2pt 0; }
       </style>
     </head>
     <body>
-      <div class="center">
-        <p class="kop-title">KULIAH KERJA NYATA (KKN) ${(settings.kkn_university || "UNIVERSITAS").toUpperCase()}</p>
-        <p class="kop-sub">${(settings.kkn_group_name || "KELOMPOK KKN").toUpperCase()} - ${(settings.kkn_village || "DESA").toUpperCase()}</p>
-        <p class="kop-address">Sekretariat / Posko: ${settings.kkn_village || "Desa"} | Email: kkn.official@univ.ac.id</p>
-      </div>
+      <table style="width: 100%; border-bottom: 3px double #000; margin: 0 0 12pt;">
+        <tr>
+          <td style="width: 16%; text-align: left; vertical-align: middle;"><img src="${ugmLogo}" alt="Logo UGM" style="width: 70px; height: 70px; object-fit: contain;"></td>
+          <td style="width: 68%; text-align: center; vertical-align: middle;">
+            <p class="kop-title">KULIAH KERJA NYATA - PEMBELAJARAN<br>PEMBERDAYAAN MASYARAKAT</p>
+            <p class="kop-sub">${(settings.kkn_university || "UNIVERSITAS GADJAH MADA").toUpperCase()}</p>
+            <p class="kop-sub">PESISIR SELATAN PERIODE II TAHUN 2026</p>
+            <p class="kop-address">Sekretariat / Posko: ${settings.kkn_village || "Desa"}<br>Instagram: @menorehmandeh | Email: menorehmandeh@gmail.com</p>
+          </td>
+          <td style="width: 16%; text-align: right; vertical-align: middle;"><img src="${kknLogo}" alt="Logo KKN" style="width: 70px; height: 70px; object-fit: contain;"></td>
+        </tr>
+      </table>
       <hr/>
 
       <div class="right">
@@ -675,10 +889,10 @@ function downloadWordDocument() {
         </tr>
       </table>
 
-      <p style="margin-top: 15pt;">Kepada Yth.<br/>
+      ${showRecipient ? `<p style="margin-top: 15pt;">Kepada Yth.<br/>
       <b>${rName}</b><br/>
       ${rTitle}<br/>
-      di Tempat</p>
+      di Tempat</p>` : ""}
 
       <p style="margin-top: 12pt;">Dengan hormat,</p>
       <p class="justify">${op}</p>
@@ -713,12 +927,14 @@ function downloadWordDocument() {
       <table style="width: 100%; margin-top: 15pt;">
         <tr>
           <td style="width: 50%; text-align: center;">
-            Sekretaris KKN,<br/><br/><br/><br/>
-            <b><u>(${settings.kkn_secretary_name || "Sekretaris"})</u></b>
+            ${secretaryRole},<br/>
+            ${letterSignatureImages.secretary ? `<img src="${letterSignatureImages.secretary}" alt="Tanda tangan sekretaris" style="display:block; width:110px; height:55px; object-fit:contain; margin:4pt auto;">` : "<br/><br/><br/>"}
+            <b><u>(${secretaryName})</u></b>
           </td>
           <td style="width: 50%; text-align: center;">
-            Ketua Kelompok KKN,<br/><br/><br/><br/>
-            <b><u>(${settings.kkn_leader_name || "Ketua Kelompok"})</u></b>
+            ${leaderRole},<br/>
+            ${letterSignatureImages.leader ? `<img src="${letterSignatureImages.leader}" alt="Tanda tangan ketua" style="display:block; width:110px; height:55px; object-fit:contain; margin:4pt auto;">` : "<br/><br/><br/>"}
+            <b><u>(${leaderName})</u></b>
           </td>
         </tr>
       </table>
@@ -733,6 +949,15 @@ function downloadWordDocument() {
       `
           : ""
       }
+      ${secondPageEnabled ? `
+        <div style="page-break-before: always; padding-top: 2.5cm;">
+          <h2 class="center" style="font-size:14pt; border-bottom:3px double #000; padding-bottom:6pt;">${secondPageTitle}</h2>
+          <table style="width:100%; border-collapse:collapse; margin-top:12pt;">
+            <thead><tr>${["No.", "Kegiatan", "Waktu", "Tempat", "Keterangan"].map((heading) => `<th style="border:1px solid #000; padding:6pt; text-align:center;">${heading}</th>`).join("")}</tr></thead>
+            <tbody>${letterTableRows.map((row) => `<tr>${[row.no, row.activity, row.time, row.location, row.notes].map((cell) => `<td style="border:1px solid #000; padding:6pt; vertical-align:top;">${escapeHtml(cell)}</td>`).join("")}</tr>`).join("")}</tbody>
+          </table>
+        </div>
+      ` : ""}
     </body>
     </html>
   `;
@@ -755,9 +980,24 @@ function downloadWordDocument() {
   showToast("Surat Microsoft Word (.doc) berhasil diunduh!");
 }
 
+async function getAssetDataUrl(path) {
+  try {
+    const response = await fetch(path);
+    const blob = await response.blob();
+    return await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    return path;
+  }
+}
+
 // Download PDF directly in the browser
 function downloadPdfDocument() {
-  const letterPreview = document.getElementById("a4-letter-preview");
+  const letterPreview = document.getElementById("print-area");
   if (!letterPreview) return;
 
   if (typeof html2pdf !== "function") {
@@ -771,7 +1011,7 @@ function downloadPdfDocument() {
   const safeFilename = (settings.kkn_group_name || "Surat_KKN")
     .replace(/[^a-zA-Z0-9_-]/g, "_");
   const pdfOptions = {
-    margin: [10, 10, 10, 10],
+    margin: 0,
     filename: `${safeFilename}.pdf`,
     image: { type: "jpeg", quality: 0.98 },
     html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
