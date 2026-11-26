@@ -310,15 +310,17 @@ function initCloudAuth() {
       return;
     }
 
-    const signUpOptions = window.KKN_AUTH_REDIRECT_URL
-      ? { options: { emailRedirectTo: window.KKN_AUTH_REDIRECT_URL } }
-      : {};
     const result = actionButton.dataset.authAction === "signup"
-      ? await window.kknSupabase.auth.signUp({ email, password, ...signUpOptions })
+      ? await window.kknSupabase.auth.signUp({ email, password })
       : await window.kknSupabase.auth.signInWithPassword({ email, password });
 
     if (result.error) {
       showToast(result.error.message, "error");
+      return;
+    }
+
+    if (!(await window.KKN_CLOUD.getSession())) {
+      showToast("Akun belum bisa langsung masuk. Matikan pengaturan Confirm email di Supabase.", "error");
       return;
     }
 
@@ -369,11 +371,8 @@ async function initRequiredAuth() {
     button.disabled = true;
     message.textContent = "Memproses...";
     message.className = "mt-4 text-center text-xs text-slate-500";
-    const signUpOptions = window.KKN_AUTH_REDIRECT_URL
-      ? { options: { emailRedirectTo: window.KKN_AUTH_REDIRECT_URL } }
-      : {};
     const result = button.dataset.gateAction === "signup"
-      ? await window.kknSupabase.auth.signUp({ email, password, ...signUpOptions })
+      ? await window.kknSupabase.auth.signUp({ email, password })
       : await window.kknSupabase.auth.signInWithPassword({ email, password });
 
     if (result.error) {
@@ -385,8 +384,8 @@ async function initRequiredAuth() {
 
     if (!(await window.KKN_CLOUD.getSession())) {
       button.disabled = false;
-      message.textContent = "Pendaftaran berhasil. Jika konfirmasi email aktif di Supabase, akun perlu diaktifkan oleh admin terlebih dahulu.";
-      message.className = "mt-4 text-center text-xs text-emerald-600";
+      message.textContent = "Akun belum bisa langsung masuk. Matikan pengaturan Confirm email di Supabase.";
+      message.className = "mt-4 text-center text-xs text-rose-600";
       return;
     }
 
