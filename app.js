@@ -298,14 +298,15 @@ function initCloudAuth() {
     modal.classList.remove("flex");
   });
 
-  form.addEventListener("click", async (event) => {
-    const actionButton = event.target.closest("[data-auth-action]");
+  form.addEventListener("submit", async (event) => {
+    const actionButton = event.submitter;
     if (!actionButton) return;
     event.preventDefault();
-    const email = document.getElementById("cloud-auth-email").value.trim();
+    const username = document.getElementById("cloud-auth-username").value.trim();
     const password = document.getElementById("cloud-auth-password").value;
-    if (!email || password.length < 6) {
-      showToast("Isi email dan password minimal 6 karakter.", "error");
+    const email = usernameToAuthEmail(username);
+    if (!isValidUsername(username) || password.length < 6) {
+      showToast("Username minimal 3 karakter dan password minimal 6 karakter.", "error");
       return;
     }
 
@@ -352,14 +353,15 @@ async function initRequiredAuth() {
     return true;
   }
 
-  form.addEventListener("click", async (event) => {
-    const button = event.target.closest("[data-gate-action]");
+  form.addEventListener("submit", async (event) => {
+    const button = event.submitter;
     if (!button) return;
     event.preventDefault();
-    const email = document.getElementById("auth-gate-email").value.trim();
+    const username = document.getElementById("auth-gate-username").value.trim();
     const password = document.getElementById("auth-gate-password").value;
-    if (!email || password.length < 6) {
-      message.textContent = "Masukkan email dan password minimal 6 karakter.";
+    const email = usernameToAuthEmail(username);
+    if (!isValidUsername(username) || password.length < 6) {
+      message.textContent = "Username minimal 3 karakter dan password minimal 6 karakter.";
       message.className = "mt-4 text-center text-xs text-rose-600";
       return;
     }
@@ -383,7 +385,7 @@ async function initRequiredAuth() {
 
     if (!(await window.KKN_CLOUD.getSession())) {
       button.disabled = false;
-      message.textContent = "Pendaftaran berhasil. Periksa email untuk konfirmasi, lalu login.";
+      message.textContent = "Pendaftaran berhasil. Jika konfirmasi email aktif di Supabase, akun perlu diaktifkan oleh admin terlebih dahulu.";
       message.className = "mt-4 text-center text-xs text-emerald-600";
       return;
     }
@@ -395,6 +397,14 @@ async function initRequiredAuth() {
   });
 
   return false;
+}
+
+function isValidUsername(username) {
+  return /^[a-z0-9][a-z0-9._-]{2,31}$/i.test(username);
+}
+
+function usernameToAuthEmail(username) {
+  return `${username.toLowerCase()}@${window.KKN_AUTH_EMAIL_DOMAIN || "kkn.local"}`;
 }
 
 function initializeAppAfterAuth() {

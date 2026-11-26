@@ -64,11 +64,11 @@
         <p class="mt-2 text-sm leading-relaxed text-slate-500">Data KKN tersimpan di cloud dan dapat diperbarui bersama anggota lainnya.</p>
       </div>
       <form id="auth-gate-form" class="mt-6 space-y-3">
-        <input id="auth-gate-email" type="email" required placeholder="Email anggota KKN" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-[#438fb5] focus:ring-2 focus:ring-[#b7e3f5]">
+        <input id="auth-gate-username" type="text" required minlength="3" autocomplete="username" placeholder="Username anggota KKN" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-[#438fb5] focus:ring-2 focus:ring-[#b7e3f5]">
         <input id="auth-gate-password" type="password" required minlength="6" placeholder="Password minimal 6 karakter" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-[#438fb5] focus:ring-2 focus:ring-[#b7e3f5]">
         <div class="grid grid-cols-2 gap-3 pt-2">
           <button type="submit" data-gate-action="login" class="rounded-xl bg-[#124b68] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#0f3d55]">Login</button>
-          <button type="button" data-gate-action="signup" class="rounded-xl border border-[#438fb5] px-4 py-3 text-sm font-bold text-[#266a94] transition hover:bg-[#eff9fc]">Daftar</button>
+          <button type="submit" data-gate-action="signup" class="rounded-xl border border-[#438fb5] px-4 py-3 text-sm font-bold text-[#266a94] transition hover:bg-[#eff9fc]">Daftar</button>
         </div>
       </form>
       <p id="auth-gate-message" class="mt-4 text-center text-xs text-slate-500"></p>
@@ -89,11 +89,11 @@
         <button id="cloud-auth-close" type="button" class="text-slate-400 hover:text-slate-700 text-xl">&times;</button>
       </div>
       <form id="cloud-auth-form" class="space-y-3">
-        <input id="cloud-auth-email" type="email" required placeholder="Email anggota KKN" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        <input id="cloud-auth-username" type="text" required minlength="3" autocomplete="username" placeholder="Username anggota KKN" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
         <input id="cloud-auth-password" type="password" required minlength="6" placeholder="Password minimal 6 karakter" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
         <div class="flex gap-2 pt-2">
           <button type="submit" data-auth-action="login" class="flex-1 px-3 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-lg text-sm font-semibold">Login</button>
-          <button type="button" data-auth-action="signup" class="flex-1 px-3 py-2 border border-blue-200 text-blue-700 hover:bg-blue-50 rounded-lg text-sm font-semibold">Daftar</button>
+          <button type="submit" data-auth-action="signup" class="flex-1 px-3 py-2 border border-blue-200 text-blue-700 hover:bg-blue-50 rounded-lg text-sm font-semibold">Daftar</button>
         </div>
       </form>
     </div>
