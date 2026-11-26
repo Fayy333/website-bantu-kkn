@@ -230,7 +230,6 @@ function setStorage(key, val) {
   localStorage.setItem(key, JSON.stringify(val));
   const changedAt = Date.now();
   localStorage.setItem(`kkn_local_changed_${key}`, String(changedAt));
-  window.KKN_CLOUD?.push(key, val, changedAt);
 }
 
 // 3. TOAST NOTIFICATION
@@ -261,154 +260,14 @@ function showToast(message, type = "success") {
   }, 3500);
 }
 
-function initCloudAuth() {
-  const authButton = document.getElementById("cloud-auth-button");
-  const modal = document.getElementById("cloud-auth-modal");
-  const form = document.getElementById("cloud-auth-form");
-  const closeButton = document.getElementById("cloud-auth-close");
-  if (!authButton || !modal || !form || !window.kknSupabase) return;
-
-  const updateAuthButton = async () => {
-    const session = await window.KKN_CLOUD.getSession();
-    const label = authButton.querySelector("span:last-child");
-    const dot = authButton.querySelector("span:first-child");
-    if (session) {
-      label.textContent = "Cloud Aktif";
-      dot.className = "w-2 h-2 rounded-full bg-emerald-500";
-      authButton.title = session.user.email || "Cloud aktif";
-    } else {
-      label.textContent = "Login Cloud";
-      dot.className = "w-2 h-2 rounded-full bg-amber-400";
-    }
-  };
-
-  authButton.addEventListener("click", async () => {
-    if (await window.KKN_CLOUD.getSession()) {
-      await window.kknSupabase.auth.signOut();
-      await updateAuthButton();
-      showToast("Logout cloud berhasil.");
-      return;
-    }
-    modal.classList.remove("hidden");
-    modal.classList.add("flex");
-  });
-
-  closeButton.addEventListener("click", () => {
-    modal.classList.add("hidden");
-    modal.classList.remove("flex");
-  });
-
-  form.addEventListener("submit", async (event) => {
-    const actionButton = event.submitter;
-    if (!actionButton) return;
-    event.preventDefault();
-    const username = document.getElementById("cloud-auth-username").value.trim();
-    const password = document.getElementById("cloud-auth-password").value;
-    const email = usernameToAuthEmail(username);
-    if (!isValidUsername(username) || password.length < 6) {
-      showToast("Username minimal 3 karakter dan password minimal 6 karakter.", "error");
-      return;
-    }
-
-    const result = actionButton.dataset.authAction === "signup"
-      ? await window.kknSupabase.auth.signUp({ email, password })
-      : await window.kknSupabase.auth.signInWithPassword({ email, password });
-
-    if (result.error) {
-      showToast(result.error.message, "error");
-      return;
-    }
-
-    if (!(await window.KKN_CLOUD.getSession())) {
-      showToast("Akun belum bisa langsung masuk. Matikan pengaturan Confirm email di Supabase.", "error");
-      return;
-    }
-
-    await window.KKN_CLOUD.seedOrPull();
-    modal.classList.add("hidden");
-    modal.classList.remove("flex");
-    await updateAuthButton();
-    window.location.reload();
-  });
-
-  window.kknSupabase.auth.onAuthStateChange(updateAuthButton);
-  updateAuthButton();
-}
-
 async function initRequiredAuth() {
   const gate = document.getElementById("auth-gate");
-  const form = document.getElementById("auth-gate-form");
-  const message = document.getElementById("auth-gate-message");
-  if (!gate || !form || !window.kknSupabase) return false;
-
-  if (window.location.protocol === "file:") {
-    form.querySelectorAll("button").forEach((button) => { button.disabled = true; });
-    message.textContent = "Jalankan aplikasi melalui http://localhost, bukan dengan membuka file HTML langsung.";
-    message.className = "mt-4 text-center text-xs text-rose-600";
-    return false;
-  }
-
-  const session = await window.KKN_CLOUD.getSession();
-  if (session) {
-    gate.classList.add("hidden");
-    document.body.classList.remove("auth-locked");
-    return true;
-  }
-
-  form.addEventListener("submit", async (event) => {
-    const button = event.submitter;
-    if (!button) return;
-    event.preventDefault();
-    const username = document.getElementById("auth-gate-username").value.trim();
-    const password = document.getElementById("auth-gate-password").value;
-    const email = usernameToAuthEmail(username);
-    if (!isValidUsername(username) || password.length < 6) {
-      message.textContent = "Username minimal 3 karakter dan password minimal 6 karakter.";
-      message.className = "mt-4 text-center text-xs text-rose-600";
-      return;
-    }
-
-    button.disabled = true;
-    message.textContent = "Memproses...";
-    message.className = "mt-4 text-center text-xs text-slate-500";
-    const result = button.dataset.gateAction === "signup"
-      ? await window.kknSupabase.auth.signUp({ email, password })
-      : await window.kknSupabase.auth.signInWithPassword({ email, password });
-
-    if (result.error) {
-      button.disabled = false;
-      message.textContent = result.error.message;
-      message.className = "mt-4 text-center text-xs text-rose-600";
-      return;
-    }
-
-    if (!(await window.KKN_CLOUD.getSession())) {
-      button.disabled = false;
-      message.textContent = "Akun belum bisa langsung masuk. Matikan pengaturan Confirm email di Supabase.";
-      message.className = "mt-4 text-center text-xs text-rose-600";
-      return;
-    }
-
-    await window.KKN_CLOUD.seedOrPull();
-    gate.classList.add("hidden");
-    document.body.classList.remove("auth-locked");
-    initializeAppAfterAuth();
-  });
-
-  return false;
-}
-
-function isValidUsername(username) {
-  return /^[a-z0-9][a-z0-9._-]{2,31}$/i.test(username);
-}
-
-function usernameToAuthEmail(username) {
-  return `${username.toLowerCase()}@${window.KKN_AUTH_EMAIL_DOMAIN || "kkn.local"}`;
+  gate?.classList.add("hidden");
+  document.body.classList.remove("auth-locked");
+  return true;
 }
 
 function initializeAppAfterAuth() {
-  window.KKN_CLOUD?.subscribe();
-  initCloudAuth();
   initTabs();
   loadSettings();
   initLetterGenerator();
@@ -1588,7 +1447,6 @@ function renderDashboardLinks() {
 document.addEventListener("DOMContentLoaded", () => {
   (async () => {
     if (!(await initRequiredAuth())) return;
-    await window.KKN_CLOUD?.seedOrPull();
     initializeAppAfterAuth();
   })();
 });

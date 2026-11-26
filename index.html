@@ -10,10 +10,6 @@
   <link rel="stylesheet" href="style.css?v=mande-background-2">
   <!-- PDF generator for direct browser downloads -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <!-- Supabase cloud database -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase-config.js"></script>
-  <script src="supabase-sync.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -55,7 +51,7 @@
 <body class="auth-locked min-h-screen bg-[#fffdf4] text-slate-800 flex flex-col antialiased selection:bg-[#266a94] selection:text-white">
 
   <!-- Required cloud login gate -->
-  <div id="auth-gate" class="fixed inset-0 z-[60] flex items-center justify-center bg-[#fffdf4] p-4">
+  <div id="auth-gate" class="hidden fixed inset-0 z-[60] items-center justify-center bg-[#fffdf4] p-4">
     <div class="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl shadow-[#124b68]/15 sm:p-8">
       <div class="text-center">
         <img class="mande-logo mx-auto mb-4" src="assets/logo-mandeh.svg" alt="Logo Mandeh">
@@ -119,7 +115,7 @@
 
       <!-- Quick status & Profile -->
       <div class="flex items-center gap-3">
-        <button id="cloud-auth-button" class="flex items-center gap-2 px-3 py-1 bg-slate-100 rounded-full text-xs font-medium text-slate-700 border border-slate-200 hover:bg-blue-50 hover:text-blue-700 transition">
+        <button id="cloud-auth-button" hidden class="flex items-center gap-2 px-3 py-1 bg-slate-100 rounded-full text-xs font-medium text-slate-700 border border-slate-200 hover:bg-blue-50 hover:text-blue-700 transition">
           <span class="w-2 h-2 rounded-full bg-amber-400"></span>
           <span>Login Cloud</span>
         </button>
