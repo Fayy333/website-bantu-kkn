@@ -161,6 +161,13 @@ body.auth-locked > footer { display: none; }
   object-position: center;
 }
 
+#print-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
 .letter-second-page {
   width: 210mm;
   min-height: 297mm;
