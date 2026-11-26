@@ -1019,26 +1019,25 @@ async function downloadPdfDocument() {
     pagebreak: { mode: ["css", "legacy"] }
   };
 
-  const exportArea = letterPreview.cloneNode(true);
-  exportArea.style.width = `${letterPreview.getBoundingClientRect().width}px`;
-  exportArea.style.position = "absolute";
-  exportArea.style.left = "-100000px";
-  exportArea.style.top = "0";
-  exportArea.style.background = "#ffffff";
-  document.body.appendChild(exportArea);
-
+  const images = [...letterPreview.querySelectorAll("img")];
+  const originalSources = images.map((image) => image.getAttribute("src"));
   try {
-    await Promise.all([...exportArea.querySelectorAll("img")].map(async (image) => {
+    await Promise.all(images.map(async (image) => {
       const source = image.getAttribute("src") || "";
       if (!source || source.startsWith("data:")) return;
       image.src = await getAssetDataUrl(source.split("?")[0]);
+      if (typeof image.decode === "function") await image.decode().catch(() => {});
     }));
-    await html2pdf().set(pdfOptions).from(exportArea).save();
+    await html2pdf().set(pdfOptions).from(letterPreview).save();
     showToast("Surat PDF berhasil diunduh!");
   } catch {
     showToast("PDF gagal dibuat. Silakan coba lagi.");
   } finally {
-    exportArea.remove();
+    images.forEach((image, index) => {
+      const originalSource = originalSources[index];
+      if (originalSource === null) image.removeAttribute("src");
+      else image.setAttribute("src", originalSource);
+    });
   }
 }
 
