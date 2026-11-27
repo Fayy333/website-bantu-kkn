@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" role="img" aria-labelledby="ugm-title ugm-desc">
+  <title id="ugm-title">Logo Universitas Gadjah Mada</title>
+  <desc id="ugm-desc">Lambang Universitas Gadjah Mada - Surya Binolong dengan bintang lima</desc>
+  <defs>
+    <clipPath id="ugm-clip"><circle cx="110" cy="110" r="100"/></clipPath>
+    <radialGradient id="ugm-gold" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFE066"/>
+      <stop offset="100%" stop-color="#FDCB2C"/>
+    </radialGradient>
+  </defs>
+  <!-- Outer ring -->
+  <circle cx="110" cy="110" r="108" fill="#004D71"/>
+  <circle cx="110" cy="110" r="104" fill="none" stroke="#FDCB2C" stroke-width="3"/>
+  <circle cx="110" cy="110" r="100" fill="#004D71"/>
+  <!-- Text band outer -->
+  <circle cx="110" cy="110" r="92" fill="none" stroke="#FDCB2C" stroke-width="1.5"/>
+  <circle cx="110" cy="110" r="78" fill="none" stroke="#FDCB2C" stroke-width="1.5"/>
+  <!-- Text: UNIVERSITAS at top, JOGJAKARTA at bottom -->
+  <path id="ugm-top" d="M 110 110 m -85 0 a 85 85 0 1 1 170 0" fill="none"/>
+  <text font-family="serif" font-size="10" fill="#FDCB2C" font-weight="bold" letter-spacing="4">
+    <textPath href="#ugm-top" startOffset="17%">UNIVERSITAS</textPath>
+  </text>
+  <path id="ugm-bot" d="M 25 110 a 85 85 0 0 0 170 0" fill="none"/>
+  <text font-family="serif" font-size="10" fill="#FDCB2C" font-weight="bold" letter-spacing="3">
+    <textPath href="#ugm-bot" startOffset="16%">JOGJAKARTA</textPath>
+  </text>
+  <!-- Inner text band -->
+  <circle cx="110" cy="110" r="72" fill="#004D71"/>
+  <path id="ugm-mid" d="M 110 110 m -65 0 a 65 65 0 1 1 130 0" fill="none"/>
+  <text font-family="serif" font-size="11" fill="#FDCB2C" font-weight="bold" letter-spacing="5">
+    <textPath href="#ugm-mid" startOffset="18%">GADJAH MADA</textPath>
+  </text>
+  <circle cx="110" cy="110" r="56" fill="none" stroke="#FDCB2C" stroke-width="1"/>
+  <!-- Star rays (5-pointed kartika) -->
+  <g fill="url(#ugm-gold)" opacity="0.95">
+    <polygon points="110,18 116,52 134,30 122,58 148,46 128,66 158,66 132,74 156,90 128,82 110,74"/>
+    <polygon points="110,18 104,52 86,30 98,58 72,46 92,66 62,66 88,74 64,90 92,82 110,74"/>
+    <polygon points="197,82 164,88 188,106 158,98 174,124 152,104 160,136 140,110 142,142 130,112 110,74"/>
+    <polygon points="23,82 56,88 32,106 62,98 46,124 68,104 60,136 80,110 78,142 90,112 110,74"/>
+    <polygon points="164,186 148,156 170,154 144,138 160,116 136,128 130,112 110,74 90,112 84,128 60,116 76,138 50,154 72,156 56,186 80,164 78,142 110,180 142,142 140,164"/>
+  </g>
+  <!-- Central Surya Binolong (pierced sun) -->
+  <circle cx="110" cy="74" r="18" fill="#004D71"/>
+  <circle cx="110" cy="74" r="15" fill="none" stroke="#FDCB2C" stroke-width="2"/>
+  <circle cx="110" cy="74" r="8" fill="#FDCB2C"/>
+  <circle cx="110" cy="74" r="4" fill="#004D71"/>
+  <!-- 5 Songkoks (caps) at outer tips -->
+  <g fill="#fff" stroke="#FDCB2C" stroke-width="0.8">
+    <path d="M110 8 l-8 12 h16 z"/>
+    <path d="M200 78 l-12 -6 v14 z"/>
+    <path d="M170 188 l-4 -14 l-10 8 z"/>
+    <path d="M50 188 l4 -14 l10 8 z"/>
+    <path d="M20 78 l12 -6 v14 z"/>
+  </g>
+  <!-- 5 Tombak (spears) between caps -->
+  <g fill="#FDCB2C">
+    <rect x="156" y="28" width="2.5" height="22" rx="1" transform="rotate(35,157,39)"/>
+    <rect x="192" y="140" width="2.5" height="22" rx="1" transform="rotate(110,193,151)"/>
+    <rect x="136" y="198" width="2.5" height="22" rx="1" transform="rotate(178,137,209)"/>
+    <rect x="62" y="198" width="2.5" height="22" rx="1" transform="rotate(-178,63,209)"/>
+    <rect x="22" y="140" width="2.5" height="22" rx="1" transform="rotate(-110,23,151)"/>
+  </g>
+</svg>
