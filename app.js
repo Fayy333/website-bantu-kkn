@@ -667,6 +667,13 @@ function escapeHtml(value) {
   return String(value || "").replace(/[&<>\"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[char]));
 }
 
+function getFilledLetterTableRows() {
+  return letterTableRows.filter((row) =>
+    [row.activity, row.time, row.location, row.notes]
+      .some((cell) => String(cell || "").trim() !== "")
+  );
+}
+
 function updateLetterPreview() {
   const settings = getStorage(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
 
@@ -752,7 +759,7 @@ function updateLetterPreview() {
   if (secondPageTitleElement) secondPageTitleElement.textContent = secondPageTitle;
   const tableBody = document.getElementById("prev-letter-table-body");
   if (tableBody) {
-    tableBody.innerHTML = letterTableRows.map((row) => `
+    tableBody.innerHTML = getFilledLetterTableRows().map((row) => `
       <tr>
         <td>${escapeHtml(row.no)}</td>
         <td>${escapeHtml(row.activity)}</td>
@@ -827,6 +834,7 @@ async function downloadWordDocument() {
   const leaderRole = document.getElementById("letter-leader-role")?.value || "Ketua Kelompok KKN";
   const secondPageEnabled = document.getElementById("letter-second-page-enabled")?.checked === true;
   const secondPageTitle = document.getElementById("letter-second-page-title")?.value || "Lampiran Rencana Kegiatan KKN";
+  const filledLetterTableRows = getFilledLetterTableRows();
   const [ugmLogo, kknLogo] = await Promise.all([
     getAssetDataUrl("assets/logo-ugm-template.gif?v=full-3"),
     getAssetDataUrl("assets/logo-mandeh.svg?v=full-3")
@@ -954,7 +962,7 @@ async function downloadWordDocument() {
           <h2 class="center" style="font-size:14pt; border-bottom:3px double #000; padding-bottom:6pt;">${secondPageTitle}</h2>
           <table style="width:100%; border-collapse:collapse; margin-top:12pt;">
             <thead><tr>${["No.", "Kegiatan", "Waktu", "Tempat", "Keterangan"].map((heading) => `<th style="border:1px solid #000; padding:6pt; text-align:center;">${heading}</th>`).join("")}</tr></thead>
-            <tbody>${letterTableRows.map((row) => `<tr>${[row.no, row.activity, row.time, row.location, row.notes].map((cell) => `<td style="border:1px solid #000; padding:6pt; vertical-align:top;">${escapeHtml(cell)}</td>`).join("")}</tr>`).join("")}</tbody>
+            <tbody>${filledLetterTableRows.map((row) => `<tr>${[row.no, row.activity, row.time, row.location, row.notes].map((cell) => `<td style="border:1px solid #000; padding:6pt; vertical-align:top;">${escapeHtml(cell)}</td>`).join("")}</tr>`).join("")}</tbody>
           </table>
         </div>
       ` : ""}
