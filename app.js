@@ -997,8 +997,12 @@ async function getAssetDataUrl(path) {
 
 // Download PDF directly in the browser
 async function downloadPdfDocument() {
-  const letterPreview = document.getElementById("print-area");
-  if (!letterPreview) return;
+  const firstPage = document.getElementById("a4-letter-preview");
+  const secondPage = document.getElementById("letter-second-page");
+  const exportTarget = secondPage && !secondPage.classList.contains("hidden")
+    ? document.getElementById("print-area")
+    : firstPage;
+  if (!exportTarget) return;
 
   if (typeof html2pdf !== "function") {
     showToast("Generator PDF belum siap. Periksa koneksi internet lalu coba lagi.");
@@ -1016,19 +1020,28 @@ async function downloadPdfDocument() {
     image: { type: "jpeg", quality: 0.98 },
     html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
     jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-    pagebreak: { mode: ["css", "legacy"] }
+    pagebreak: { mode: ["css"] }
   };
 
-  const images = [...letterPreview.querySelectorAll("img")];
+  const images = [...exportTarget.querySelectorAll("img")];
   const originalSources = images.map((image) => image.getAttribute("src"));
+  const originalExportStyle = exportTarget.getAttribute("style");
+  const paperWidth = firstPage?.getBoundingClientRect().width || 793.7;
   try {
+    if (exportTarget.id === "print-area") {
+      exportTarget.style.width = `${paperWidth}px`;
+      exportTarget.style.display = "block";
+      exportTarget.style.alignItems = "initial";
+      exportTarget.style.gap = "0";
+      exportTarget.style.overflow = "visible";
+    }
     await Promise.all(images.map(async (image) => {
       const source = image.getAttribute("src") || "";
       if (!source || source.startsWith("data:")) return;
       image.src = await getAssetDataUrl(source.split("?")[0]);
       if (typeof image.decode === "function") await image.decode().catch(() => {});
     }));
-    await html2pdf().set(pdfOptions).from(letterPreview).save();
+    await html2pdf().set(pdfOptions).from(exportTarget).save();
     showToast("Surat PDF berhasil diunduh!");
   } catch {
     showToast("PDF gagal dibuat. Silakan coba lagi.");
@@ -1038,6 +1051,8 @@ async function downloadPdfDocument() {
       if (originalSource === null) image.removeAttribute("src");
       else image.setAttribute("src", originalSource);
     });
+    if (originalExportStyle === null) exportTarget.removeAttribute("style");
+    else exportTarget.setAttribute("style", originalExportStyle);
   }
 }
 
