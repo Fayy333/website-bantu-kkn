@@ -120,61 +120,253 @@ const DEFAULT_SCHEDULES = [
   }
 ];
 
+const LETTER_CATEGORIES = {
+  "permohonan": "📋 Surat Permohonan",
+  "bantuan": "💰 Surat Bantuan",
+  "undangan": "✉️ Surat Undangan",
+  "sponsor-mitra": "🤝 Surat Sponsor & Mitra",
+  "klaim-presensi": "⏱️ Surat Klaim Presensi",
+  "internal-eksternal": "🏢 Surat Internal & Eksternal"
+};
+
 const LETTER_TEMPLATES = [
   {
-    id: "izin-bappedalitbang",
-    name: "Surat Permohonan Izin KKN - BAPPEDALITBANG",
-    showEvent: false,
-    regarding: "Permohonan Izin Pelaksanaan Kuliah Kerja Nyata (KKN)",
-    defaultRecipientName: "Kepala BAPPEDALITBANG Kabupaten Pesisir Selatan",
-    defaultRecipientTitle: "BAPPEDALITBANG Kabupaten Pesisir Selatan",
-    defaultEventName: "Pelaksanaan Kuliah Kerja Nyata (KKN)",
-    defaultEventDate: "{periode}",
-    defaultEventTime: "Sesuai jadwal pelaksanaan KKN",
-    defaultEventLocation: "Wilayah {desa}",
-    openingText: "Sehubungan dengan akan dilaksanakannya kegiatan Kuliah Kerja Nyata (KKN) oleh mahasiswa {universitas} di wilayah {desa}, kami bermaksud memohon izin dan dukungan untuk melaksanakan kegiatan tersebut sesuai dengan program kerja yang telah disusun.",
-    closingText: "Demikian surat permohonan izin ini kami sampaikan. Besar harapan kami agar permohonan ini dapat disetujui. Atas perhatian, izin, dan kerja sama yang diberikan, kami ucapkan terima kasih."
+    "id": "izin-bappedalitbang",
+    "category": "permohonan",
+    "name": "Surat Permohonan Izin KKN - BAPPEDALITBANG",
+    "showEvent": false,
+    "defaultAttachment": "1 Lembar",
+    "defaultNumber": "001/MENOREHMANDEH/KKN/I/2026",
+    "regarding": "Permohonan Izin KKN",
+    "defaultRecipientName": "Kepala Badan Perencanaan Daerah Penelitian dan Pengembangan",
+    "defaultRecipientTitle": "Kabupaten Pesisir Selatan",
+    "openingText": "Sehubungan dengan akan dilaksanakannya Kuliah Kerja Nyata - Pembelajaran Pemberdayaan Masyarakat Universitas Gadjah Mada (KKN-PPM UGM) Periode II Tahun 2026. Kami selaku tim pengusul KKN-PPM UGM Pesisir Selatan meminta izin kepada BAPPEDALITBANG Kabupaten Pesisir Selatan supaya kami dapat melaksanakan KKN-PPM UGM Periode II Tahun 2026 di Nagari Mandeh dan Nagari Sungai Nyalo, Kecamatan Koto XI Tarusan, Kabupaten Pesisir Selatan, Sumatera Barat, pada tanggal 20 Juni - 8 Agustus 2026.\n\nAdapun tema yang akan kami bawa dalam kegiatan KKN-PPM UGM Pesisir Selatan Periode II Tahun 2026 ini, yaitu \"Optimalisasi Potensi Lokal dan Digitalisasi dalam Mendukung Penguatan Pariwisata dan Ekonomi Agro-Marine Berbasis Community Empowerment dengan Dukungan Inovasi Energi Terbarukan di Nagari Mandeh dan Nagari Sungai Nyalo, Kecamatan Koto XI Tarusan, Kabupaten Pesisir Selatan, Sumatera Barat\".",
+    "closingText": "Demikian surat permohonan ini kami sampaikan. Apabila terdapat hal teknis yang perlu dibicarakan lebih lanjut, Bapak/Ibu dapat menghubungi narahubung kami melalui nomor 0895710987500 (Muhammad Raja Alfaridzi). Atas perhatian dan kerja samanya, kami ucapkan terima kasih.",
+    "defaultEventName": "Pelaksanaan Kuliah Kerja Nyata (KKN)",
+    "defaultEventDate": "{periode}",
+    "defaultEventTime": "Sesuai jadwal pelaksanaan KKN",
+    "defaultEventLocation": "Wilayah {desa}"
   },
   {
-    id: "undangan-lokakarya",
-    name: "Surat Undangan Lokakarya / Rapat Koordinasi Desa",
-    regarding: "Undangan Lokakarya Awal Program Kerja KKN",
-    openingText: "Sehubungan dengan pelaksanaan program Kuliah Kerja Nyata (KKN) mahasiswa di wilayah Desa, kami bermaksud mengundang Bapak/Ibu untuk dapat hadir dalam kegiatan Lokakarya Awal guna pemaparan dan koordinasi program kerja kemasyarakatan, yang insya Allah akan dilaksanakan pada:",
-    closingText: "Mengingat pentingnya acara ini demi kelancaran sinergi program pengabdian bersama masyarakat, kami sangat mengharapkan kehadiran Bapak/Ibu tepat pada waktunya. Atas perhatian dan kerjasamanya, kami haturkan terima kasih.",
-    defaultEventName: "Lokakarya Awal & Silaturahmi Tim KKN dengan Perangkat Desa"
+    "id": "izin-tempat",
+    "category": "permohonan",
+    "name": "Surat Permohonan Izin Tempat / Peminjaman Balai",
+    "showEvent": true,
+    "defaultAttachment": "-",
+    "defaultNumber": "014/MENOREHMANDEH/KKN/VII/2026",
+    "regarding": "Permohonan Izin Penggunaan Fasilitas / Balai Warga",
+    "defaultRecipientName": "Pengelola Gedung / Tokoh Masyarakat Setempat",
+    "defaultRecipientTitle": "Nagari Sungai Nyalo & Mandeh",
+    "openingText": "Dalam rangka merealisasikan program kerja pengabdian mahasiswa Kuliah Kerja Nyata (KKN), kami bermaksud memohon izin untuk menggunakan fasilitas tempat guna mendukung kelancaran kegiatan yang akan kami laksanakan pada:",
+    "closingText": "Kami berkomitmen untuk menjaga ketertiban, kebersihan, dan fasilitas yang digunakan sebaik-baiknya. Demikian surat permohonan izin ini kami sampaikan, atas izin dan bantuan yang diberikan kami ucapkan terima kasih yang sebesar-besarnya.",
+    "defaultEventName": "Penggunaan Fasilitas Balai Pertemuan untuk Sosialisasi KKN",
+    "defaultEventDate": "Juli 2026",
+    "defaultEventTime": "09.00 WIB s/d Selesai",
+    "defaultEventLocation": "Aula Pertemuan Balai Nagari"
   },
   {
-    id: "izin-tempat",
-    name: "Surat Permohonan Izin Tempat / Peminjaman Balai",
-    regarding: "Permohonan Izin Penggunaan Fasilitas / Balai Warga",
-    openingText: "Dalam rangka merealisasikan program kerja pengabdian mahasiswa Kuliah Kerja Nyata (KKN), kami bermaksud memohon izin untuk menggunakan fasilitas tempat guna mendukung kelancaran kegiatan yang akan kami laksanakan pada:",
-    closingText: "Kami berkomitmen untuk menjaga ketertiban, kebersihan, dan fasilitas yang digunakan sebaik-baiknya. Demikian surat permohonan izin ini kami sampaikan, atas izin dan bantuan yang diberikan kami ucapkan terima kasih yang sebesar-besarnya.",
-    defaultEventName: "Penggunaan Fasilitas Balai Pertemuan untuk Sosialisasi KKN"
+    "id": "narasumber",
+    "category": "permohonan",
+    "name": "Surat Permohonan Pemateri / Narasumber Penyuluhan",
+    "showEvent": true,
+    "defaultAttachment": "1 Lembar Term of Reference (TOR)",
+    "defaultNumber": "025/MENOREHMANDEH/KKN/VII/2026",
+    "regarding": "Permohonan Kesediaan Menjadi Narasumber / Pemateri",
+    "defaultRecipientName": "Bapak/Ibu Pemateri / Praktisi Ahli",
+    "defaultRecipientTitle": "Instansi / Lembaga Terkait",
+    "openingText": "Dalam rangka meningkatkan wawasan serta pemberdayaan masyarakat desa melalui program kerja Kuliah Kerja Nyata (KKN), dengan hormat kami memohon kesediaan Bapak/Ibu untuk berkenan menjadi narasumber/pemateri pada kegiatan edukatif yang akan diselenggarakan pada:",
+    "closingText": "Besar harapan kami agar Bapak/Ibu dapat berkenan meluangkan waktu serta berbagi ilmu yang sangat bermanfaat bagi warga masyarakat. Atas kesediaan dan kerjasamanya, kami sampaikan terima kasih.",
+    "defaultEventName": "Pelatihan dan Edukasi Ketahanan Pangan serta Inovasi Olahan Pesisir",
+    "defaultEventDate": "Juli 2026",
+    "defaultEventTime": "08.30 WIB s/d Selesai",
+    "defaultEventLocation": "Kantor Nagari / Balai Pertemuan Warga"
   },
   {
-    id: "narasumber",
-    name: "Surat Permohonan Pemateri / Narasumber Penyuluhan",
-    regarding: "Permohonan Kesediaan Menjadi Narasumber / Pemateri",
-    openingText: "Dalam rangka meningkatkan wawasan serta pemberdayaan masyarakat desa melalui program kerja Kuliah Kerja Nyata (KKN), dengan hormat kami memohon kesediaan Bapak/Ibu untuk berkenan menjadi narasumber/pemateri pada kegiatan edukatif yang akan diselenggarakan pada:",
-    closingText: "Besar harapan kami agar Bapak/Ibu dapat berkenan meluangkan waktu serta berbagi ilmu yang sangat bermanfaat bagi warga masyarakat. Atas kesediaan dan kerjasamanya, kami sampaikan terima kasih.",
-    defaultEventName: "Penyuluhan dan Edukasi Pola Hidup Bersih & Sehat (PHBS) Warga"
+    "id": "bantuan-dana-landmark",
+    "category": "bantuan",
+    "name": "Surat Permohonan Bantuan Dana Pembangunan Landmark",
+    "showEvent": false,
+    "defaultAttachment": "1 Berkas Proposal Pembangunan",
+    "defaultNumber": "160/MENOREHMANDEH/KKN/VII/2026",
+    "regarding": "Permohonan Bantuan Dana Pembangunan Landmark Pantai Paku",
+    "defaultRecipientName": "Bapak/Ibu Pimpinan PT Perusahaan Gas Negara Tbk",
+    "defaultRecipientTitle": "PT Perusahaan Gas Negara Tbk",
+    "openingText": "Sehubungan dengan pelaksanaan Kuliah Kerja Nyata - Pembelajaran Pemberdayaan Masyarakat Universitas Gadjah Mada (KKN-PPM UGM) Periode II Tahun 2026, kami dari Tim KKN-PPM UGM Unit Menoreh Mandeh sedang melaksanakan program kerja yang berfokus pada pengembangan wilayah, pelestarian lingkungan, dan pariwisata. Tema besar yang kami usung adalah \"Optimalisasi Potensi Lokal dan Digitalisasi dalam Mendukung Penguatan Pariwisata dan Ekonomi Agro-Marine Berbasis Community Empowerment dengan Dukungan Inovasi Energi Terbarukan di Nagari Mandeh dan Nagari Sungai Nyalo, Kecamatan Koto XI Tarusan, Kabupaten Pesisir Selatan, Sumatera Barat\".\n\nSebagai wujud nyata dari tema tersebut sekaligus melanjutkan keberlanjutan program pengembangan kawasan yang telah diinisiasi oleh tim KKN-PPM UGM Periode II Tahun 2026, kami bermaksud untuk menyelenggarakan program pembangunan infrastruktur pariwisata berupa Pembangunan Landmark Pantai Paku yang bertempat di kawasan Nagari Sungai Nyalo, Kecamatan Koto XI Tarusan, Kabupaten Pesisir Selatan.\n\nDemi kelancaran dan keberhasilan pelaksanaan program tersebut, kami mengajukan permohonan bantuan dana guna mendukung pembiayaan logistik operasional, pengadaan material bangunan, serta pelaksanaan teknis di lapangan. Mengingat komitmen PT Perusahaan Gas Negara Tbk dalam mendukung pembangunan daerah dan pemberdayaan masyarakat, kami sangat mengharapkan dukungan dan sinergi ini agar pembangunan landmark dapat berjalan secara optimal.",
+    "closingText": "Demikian surat permohonan ini kami sampaikan. Untuk informasi lebih lanjut mengenai detail rencana pembangunan dan kemitraan, dapat menghubungi narahubung kami melalui WhatsApp +62 821-1411-1297 (Athan). Atas perhatian, kerja sama, dan dukungan yang Bapak/Ibu berikan, kami mengucapkan terima kasih.",
+    "defaultEventName": "Pembangunan Landmark Pantai Paku Nagari Sungai Nyalo",
+    "defaultEventDate": "Juli - Agustus 2026",
+    "defaultEventTime": "Tahap Pembangunan Fisik",
+    "defaultEventLocation": "Pantai Paku, Nagari Sungai Nyalo"
   },
   {
-    id: "pemberitahuan-kegiatan",
-    name: "Surat Pemberitahuan Pelaksanaan Program Kerja (Proker)",
-    regarding: "Pemberitahuan Pelaksanaan Program Kerja KKN",
-    openingText: "Bersama surat ini kami beritahukan kepada Bapak/Ibu bahwa mahasiswa KKN akan menyelenggarakan agenda pengabdian masyarakat yang ditujukan bagi seluruh warga sekitar, yang direncanakan berlangsung pada:",
-    closingText: "Demikian surat pemberitahuan ini kami sampaikan agar dapat diketahui bersama dan dapat dikoordinasikan dengan segenap lapisan warga. Atas perhatian serta dukungannya, kami ucapkan terima kasih.",
-    defaultEventName: "Aksi Bersih Lingkungan & Penanaman Bibit Tanaman Obat Keluarga (TOGA)"
+    "id": "bantuan-fasilitas",
+    "category": "bantuan",
+    "name": "Surat Permohonan Bantuan Sarana & Fasilitas Kegiatan",
+    "showEvent": false,
+    "defaultAttachment": "1 Lembar Daftar Sarana & Logistik",
+    "defaultNumber": "042/MENOREHMANDEH/KKN/VII/2026",
+    "regarding": "Permohonan Bantuan Sarana Kebersihan & Fasilitas Pesisir",
+    "defaultRecipientName": "Kepala Dinas Lingkungan Hidup / Instansi Terkait",
+    "defaultRecipientTitle": "Pemerintah Kabupaten Pesisir Selatan",
+    "openingText": "Dalam rangka mendukung optimalisasi kebersihan pesisir, konservasi ekosistem mangrove, dan pengelolaan sampah terpadu di kawasan wisata Mandeh dan Sungai Nyalo, kami mahasiswa KKN-PPM Universitas Gadjah Mada bermaksud mengajukan permohonan bantuan sarana kebersihan dan fasilitas pendukung berupa tempat sampah pilah terpadu, bibit mangrove, serta papan edukasi lingkungan.\n\nBantuan sarana tersebut akan kami distribusikan langsung ke titik-titik kumpul masyarakat serta kawasan dermaga dan pantai wisata guna membangun kesadaran lingkungan yang berkelanjutan.",
+    "closingText": "Besar harapan kami permohonan bantuan ini dapat disetujui demi kemajuan dan kelestarian ekosistem pesisir bersama. Demikian surat permohonan ini kami sampaikan, atas perhatian dan bantuan yang diberikan kami ucapkan terima kasih.",
+    "defaultEventName": "Aksi Bersih Pantai & Konservasi Bahari",
+    "defaultEventDate": "Juli - Agustus 2026",
+    "defaultEventTime": "Sesuai Jadwal Penyaluran",
+    "defaultEventLocation": "Kawasan Wisata Mandeh & Sungai Nyalo"
   },
   {
-    id: "terima-kasih",
-    name: "Surat Ucapan Terima Kasih & Apresiasi Kegiatan",
-    showEvent: false,
-    regarding: "Ucapan Terima Kasih atas Dukungan Kegiatan",
-    openingText: "Sehubungan dengan telah terlaksananya rangkaian program kerja Kuliah Kerja Nyata (KKN) dengan sukses dan lancar, kami segenap panitia mahasiswa bermaksud menyampaikan apresiasi dan penghargaan yang setinggi-tingginya atas partisipasi dan bantuan Bapak/Ibu pada agenda:",
-    closingText: "Semoga kontribusi serta jalinan silaturahmi yang telah terbangun dapat memberikan kemanfaatan yang berkelanjutan bagi kemajuan desa tercinta. Demikian surat ucapan terima kasih ini kami sampaikan dengan penuh rasa hormat.",
-    defaultEventName: "Rangkaian Festival Anak Sholeh & Penutupan Bimbingan Belajar Desa"
+    "id": "undangan-festival-nyalo",
+    "category": "undangan",
+    "name": "Surat Undangan Festival Nyalo 2026 (Puncak Acara)",
+    "showEvent": true,
+    "defaultAttachment": "1 Lembar Susunan Acara",
+    "defaultNumber": "184/MENOREHMANDEH/KKN/VII/2026",
+    "regarding": "Undangan Festival Nyalo 2026",
+    "defaultRecipientName": "Kagama Pesisir Selatan / Tokoh Masyarakat",
+    "defaultRecipientTitle": "di Tempat",
+    "openingText": "Assalamu'alaikum Warahmatullahi Wabarakatuh,\nDengan Hormat,\nSehubungan dengan pelaksanaan rangkaian Kuliah Kerja Nyata - Pembelajaran Pemberdayaan Masyarakat Universitas Gadjah Mada (KKN-PPM UGM) Periode II Tahun 2026 di Nagari Mandeh dan Nagari Sungai Nyalo, Kecamatan Koto XI Tarusan, Kabupaten Pesisir Selatan, Sumatera Barat, Tim KKN-PPM UGM Menoreh Mandeh 2026 bersama masyarakat setempat akan menyelenggarakan Festival Nyalo 2026. Festival ini merupakan puncak program kerja kami sekaligus etalase hasil Teknologi Tepat Guna (TTG), pengelolaan lingkungan, transformasi digital, dan pemberdayaan UMKM pesisir yang dikembangkan bersama masyarakat.\n\nBerkaitan dengan hal tersebut, dengan hormat kami mengundang Bapak untuk berkenan hadir pada Festival Nyalo 2026 yang mengangkat tema “Ranah Minang, Rumah Basamo: Muda Melestarikan Budaya, Tua Mewariskan Nilai”. Kegiatan ini akan dilaksanakan pada:",
+    "closingText": "Kehadiran Bapak beserta jajaran sangat kami harapkan sebagai bentuk dukungan dan apresiasi untuk memeriahkan festival ini.\n\nDemikian undangan ini kami sampaikan. Untuk informasi lebih lanjut dapat menghubungi narahubung kami melalui WhatsApp +62 877‑3311‑2328 (Elfrida). Atas perhatian dan dukungan Bapak, kami ucapkan terima kasih.\nWassalamu'alaikum Warahmatullahi Wabarakatuh.",
+    "defaultEventName": "Festival Nyalo 2026: Pameran TTG, Budaya & UMKM Pesisir",
+    "defaultEventDate": "Sabtu, 1 Agustus 2026",
+    "defaultEventTime": "15.00 WIB s.d. selesai",
+    "defaultEventLocation": "Pantai Paku, Nagari Sungai Nyalo, Kecamatan Koto XI Tarusan, Kabupaten Pesisir Selatan, Sumatera Barat"
+  },
+  {
+    "id": "undangan-sosialisasi-nagari",
+    "category": "undangan",
+    "name": "Surat Undangan Sosialisasi Pertanian Modern ke Wali Nagari",
+    "showEvent": true,
+    "defaultAttachment": "-",
+    "defaultNumber": "112/MENOREHMANDEH/KKN/VII/2026",
+    "regarding": "Undangan Kegiatan Sosialisasi Pertanian Modern",
+    "defaultRecipientName": "Wali Nagari Mandeh beserta Perangkat Nagari",
+    "defaultRecipientTitle": "di Tempat",
+    "openingText": "Dengan hormat,\nSehubungan dengan pelaksanaan rangkaian Kuliah Kerja Nyata - Pembelajaran Pemberdayaan Masyarakat Universitas Gadjah Mada (KKN-PPM UGM) Periode II Tahun 2026 di Nagari Mandeh dan Nagari Sungai Nyalo, Kecamatan Koto XI Tarusan, Kabupaten Pesisir Selatan, kami berkomitmen untuk mendukung peningkatan kapasitas masyarakat, khususnya dalam sektor ketahanan pangan dan pengelolaan lahan.\n\nBerkaitan dengan hal tersebut, kami bermaksud mengundang Bapak/Ibu beserta seluruh perangkat Nagari Mandeh untuk dapat hadir dalam Kegiatan Sosialisasi Pertanian Modern dan Berkelanjutan. Kegiatan ini akan dilaksanakan pada:",
+    "closingText": "Mengingat pentingnya materi yang akan disampaikan demi kemajuan dan efisiensi sektor pertanian di Nagari Mandeh, kehadiran Bapak/Ibu sangat kami harapkan.\n\nDemikian surat permohonan ini kami sampaikan. Untuk informasi lebih lanjut dapat menghubungi narahubung kami melalui WhatsApp +62 859-2902-7160 (Jundan). Atas perhatian dan dukungan Bapak/Ibu, kami ucapkan terima kasih.",
+    "defaultEventName": "Kegiatan Sosialisasi Pertanian Modern dan Berkelanjutan",
+    "defaultEventDate": "Kamis, 23 Juli 2026",
+    "defaultEventTime": "08.00 WIB s.d. selesai",
+    "defaultEventLocation": "Kantor Wali Nagari Mandeh, Kecamatan Koto XI Tarusan, Kabupaten Pesisir Selatan, Sumatera Barat"
+  },
+  {
+    "id": "undangan-lokakarya",
+    "category": "undangan",
+    "name": "Surat Undangan Lokakarya Awal / Rapat Koordinasi Desa",
+    "showEvent": true,
+    "defaultAttachment": "1 Lembar Matriks Program Kerja",
+    "defaultNumber": "005/MENOREHMANDEH/KKN/VII/2026",
+    "regarding": "Undangan Lokakarya Awal Program Kerja KKN",
+    "defaultRecipientName": "Bapak Wali Nagari / Kepala Desa",
+    "defaultRecipientTitle": "Kantor Balai Pertemuan Nagari",
+    "openingText": "Sehubungan dengan telah tibanya mahasiswa Kuliah Kerja Nyata - Pembelajaran Pemberdayaan Masyarakat (KKN-PPM) di wilayah Nagari Mandeh dan Nagari Sungai Nyalo, kami bermaksud mengundang Bapak/Ibu seluruh jajaran perangkat nagari, Bamus, kepala jorong, dan tokoh masyarakat untuk dapat hadir dalam kegiatan Lokakarya Awal guna pemaparan dan koordinasi program kerja kemasyarakatan, yang insya Allah akan dilaksanakan pada:",
+    "closingText": "Mengingat pentingnya acara ini demi kelancaran sinergi program pengabdian bersama masyarakat, kami sangat mengharapkan kehadiran Bapak/Ibu tepat pada waktunya. Atas perhatian dan kerjasamanya, kami haturkan terima kasih.",
+    "defaultEventName": "Lokakarya Awal & Silaturahmi Tim KKN dengan Perangkat Desa",
+    "defaultEventDate": "Juli 2026",
+    "defaultEventTime": "09.00 WIB s/d Selesai",
+    "defaultEventLocation": "Aula Pertemuan Balai Nagari"
+  },
+  {
+    "id": "sponsor-resort",
+    "category": "sponsor-mitra",
+    "name": "Surat Permohonan Pengajuan Dana & Sponsor (Kulik Kayu Resort)",
+    "showEvent": true,
+    "defaultAttachment": "1 Bundel Proposal Pengajuan Dana",
+    "defaultNumber": "161/MENOREHMANDEH/KKN/VII/2026",
+    "regarding": "Permohonan Pengajuan Dana",
+    "defaultRecipientName": "Bapak Edi (Pemilik Kulik Kayu Resort)",
+    "defaultRecipientTitle": "Kulik Kayu Resort",
+    "openingText": "Dengan hormat,\nSehubungan dengan pelaksanaan program Kuliah Kerja Nyata – Pembelajaran Pemberdayaan Masyarakat (KKN-PPM) Universitas Gadjah Mada Periode II Tahun 2026 dengan tema \"Optimalisasi Potensi Lokal dan Digitalisasi dalam Mendukung Penguatan Pariwisata dan Ekonomi Agromarine Berbasis Community Empowerment\", kami akan menyelenggarakan acara puncak berupa Festival Nyalo - Menoreh Mandeh 2026 yang akan dilaksanakan pada:\n\nFestival Nyalo - Menoreh Mandeh 2026 merupakan wadah promosi potensi wisata, budaya, serta produk unggulan masyarakat yang menampilkan hasil program pemberdayaan dan inovasi Tim KKN-PPM UGM Menoreh Mandeh 2026 bersama masyarakat Nagari Mandeh dan Nagari Sungai Nyalo.\n\nMelalui surat ini, kami bermaksud mengajukan permohonan dukungan dan kerja sama kepada Kulik Kayu Resort sebagai mitra kegiatan. Besar harapan kami Kulik Kayu Resort dapat berpartisipasi dalam menyukseskan Festival Nyalo 2026. Sebagai bentuk apresiasi, kami akan memberikan publikasi dan eksposur kepada mitra sesuai dengan bentuk dukungan yang diberikan sebagaimana tercantum dalam proposal terlampir.",
+    "closingText": "Demikian surat permohonan ini kami sampaikan. Untuk informasi lebih lanjut, dapat menghubungi narahubung kami melalui WhatsApp +62 813-1738-5442 (Adena). Atas perhatian, dukungan, dan kerja sama yang diberikan, kami mengucapkan terima kasih.",
+    "defaultEventName": "Festival Nyalo - Menoreh Mandeh 2026",
+    "defaultEventDate": "Sabtu, 1 Agustus 2026",
+    "defaultEventTime": "07.00 – 22.00 WIB",
+    "defaultEventLocation": "Pantai Paku, Nagari Sungai Nyalo, Kecamatan Koto XI Tarusan, Kabupaten Pesisir Selatan, Sumatera Barat"
+  },
+  {
+    "id": "mitra-bpbd-siaga",
+    "category": "sponsor-mitra",
+    "name": "Surat Permohonan Kerja Sama Program Siaga Mandeh (BPBD)",
+    "showEvent": false,
+    "defaultAttachment": "1 (satu) berkas",
+    "defaultNumber": "097/MENOREHMANDEH/KKN/VI/2026",
+    "regarding": "Permohonan Kerja Sama Program Siaga Mandeh",
+    "defaultRecipientName": "Kepala Pelaksana BPBD Provinsi Sumatera Barat",
+    "defaultRecipientTitle": "Jl. Jend. Sudirman No.47, Padang Pasir, Kec. Padang Bar., Kota Padang, Sumatera Barat 25129",
+    "openingText": "Dengan hormat,\nKami yang bertanda tangan di bawah ini, selaku Tim Kuliah Kerja Nyata – Pembelajaran Pemberdayaan Masyarakat (KKN-PPM) Menoreh Mandeh Kabupaten Pesisir Selatan, Sumatera Barat, dengan ini mengajukan permohonan kerja sama kepada Badan Penanggulangan Bencana Daerah (BPBD) Provinsi Sumatera Barat dalam rangka mendukung pelaksanaan Program Kerja \"Siaga Mandeh\", yaitu program edukasi pertolongan pertama pada kecelakaan laut dan peningkatan keselamatan wisata bahari di wilayah Mandeh, Kabupaten Pesisir Selatan.\n\nKawasan wisata bahari Mandeh merupakan salah satu destinasi unggulan Kabupaten Pesisir Selatan yang memiliki potensi ekonomi besar, tetapi juga memiliki risiko kecelakaan laut yang perlu mendapat perhatian serius. Minimnya pengetahuan masyarakat dan wisatawan tentang prosedur keselamatan dan pertolongan pertama di perairan, serta masih terbatasnya sarana keselamatan di titik-titik wisata, menjadi latar belakang utama dirancangnya program ini.\n\nMengingat BPBD Provinsi Sumatera Barat memiliki kompetensi, sumber daya, dan mandat kelembagaan dalam bidang kebencanaan dan keselamatan masyarakat, kami memandang BPBD Provinsi Sumatera Barat sebagai mitra strategis yang paling tepat untuk mendukung keberhasilan program ini. Adapun maksud dan tujuan dari permohonan kerja sama ini adalah:\n1. Mendapatkan dukungan narasumber/pemateri dari BPBD Provinsi Sumatera Barat yang berkompeten untuk memberikan pelatihan dan demonstrasi teknik pertolongan pertama pada kecelakaan laut (water rescue dan Basic Life Support) kepada masyarakat pesisir, pelaku wisata, dan pemuda desa.\n2. Mendapatkan dukungan sarana keselamatan laut (K3) berupa pelampung, ring buoy, tali rescue, dan rambu keselamatan yang akan ditempatkan secara permanen di titik-titik wisata Mandeh sebagai upaya mitigasi kecelakaan.\n3. Mendapatkan dukungan pengadaan kotak P3K beserta isinya yang akan didistribusikan ke beberapa titik wisata strategis, guna memperkuat kesiapsiagaan penanganan cedera ringan sebelum bantuan profesional medis lanjutan tiba.",
+    "closingText": "Detail rincian kebutuhan dukungan yang kami ajukan terlampir pada Lampiran I surat ini. Seluruh sarana dan prasarana yang diterima akan dikelola dan diserahkan kepada pemerintah desa/pengelola wisata setempat sebagai aset keberlanjutan program pasca-KKN.\n\nDemikian surat permohonan ini kami sampaikan. Untuk informasi lebih lanjut dapat menghubungi narahubung kami melalui WhatsApp +62 813-2815-0907 (Nabila). Kami siap untuk berdiskusi lebih lanjut mengenai teknis pelaksanaan kerja sama pada waktu yang Bapak/Ibu tentukan. Atas perhatian dan dukungan Bapak/Ibu, kami ucapkan terima kasih.",
+    "defaultEventName": "Program Kerja Siaga Mandeh: Edukasi Keselamatan Bahari",
+    "defaultEventDate": "Juni - Juli 2026",
+    "defaultEventTime": "Sesuai Kesepakatan Pelatihan",
+    "defaultEventLocation": "Kawasan Wisata Bahari Mandeh, Kec. Koto XI Tarusan"
+  },
+  {
+    "id": "klaim-presensi",
+    "category": "klaim-presensi",
+    "name": "Surat Pengantar Klaim Presensi Mahasiswa KKN (ke DPKM)",
+    "showEvent": false,
+    "defaultAttachment": "-",
+    "defaultNumber": "196/MENOREHMANDEH/KKN/VII/2026",
+    "regarding": "Pengantar Klaim Presensi",
+    "defaultRecipientName": "Direktorat Pengabdian Kepada Masyarakat UGM",
+    "defaultRecipientTitle": "Bulaksumur UGM, Yogyakarta",
+    "openingText": "Dengan hormat,\nYang bertanda tangan dibawah ini:\nNama : {kormanit_nama}\nNIM : {kormanit_nim}\nJabatan : Koordinator Mahasiswa Unit (Kormanit)\nUnit : {kkn_unit}\n\nDengan ini menerangkan bahwa:\nNama : [Nama Lengkap Mahasiswa]\nNIM : [NIM Mahasiswa]\nUnit : {kkn_unit}\n\nbenar telah mengikuti dan melaksanakan kegiatan KKN-PPM UGM pada Kamis, 3 Agustus 2026 sesuai dengan jadwal pelaksanaan KKN. Namun, yang bersangkutan tidak melakukan presensi pada sistem karena terkendala sinyal ketika melakukan presensi.",
+    "closingText": "Demikian surat keterangan ini dibuat dengan sebenar-benarnya untuk dapat dipergunakan sebagai pendukung untuk melakukan klaim presensi KKN kepada Direktorat Pengabdian Kepada Masyarakat Universitas Gadjah Mada.",
+    "defaultEventName": "Kegiatan Pelaksanaan KKN-PPM di Lapangan",
+    "defaultEventDate": "3 Agustus 2026",
+    "defaultEventTime": "Sepanjang Hari Kegiatan",
+    "defaultEventLocation": "Nagari Sungai Nyalo & Mandeh"
+  },
+  {
+    "id": "internal-dispensasi",
+    "category": "internal-eksternal",
+    "name": "Surat Permohonan Dispensasi Kuliah/Ujian Mahasiswa (Internal)",
+    "showEvent": false,
+    "defaultAttachment": "1 Berkas Jadwal Program Kerja Lapangan",
+    "defaultNumber": "078/MENOREHMANDEH/KKN/VII/2026",
+    "regarding": "Permohonan Dispensasi Akademik Mahasiswa KKN",
+    "defaultRecipientName": "Dekan / Wakil Dekan Bidang Akademik",
+    "defaultRecipientTitle": "Fakultas / Program Studi Mahasiswa Bersangkutan",
+    "openingText": "Dengan hormat,\nSehubungan dengan penugasan dan keikutsertaan mahasiswa di bawah ini dalam program Kuliah Kerja Nyata - Pembelajaran Pemberdayaan Masyarakat (KKN-PPM) Universitas Gadjah Mada Periode II Tahun 2026 di lokasi pengabdian Pesisir Selatan, Sumatera Barat:\n\nNama Mahasiswa : [Nama Lengkap Mahasiswa]\nNIM : [NIM Mahasiswa]\nFakultas / Departemen : [Fakultas / Departemen]\nUnit KKN : {kkn_unit} ({kkn_group})\n\nDengan ini kami memohonkan dispensasi dan izin bagi mahasiswa tersebut atas ketidakhadiran dalam kegiatan perkuliahan tatap muka / praktikum / evaluasi akademik pada rentang tanggal pelaksanaan KKN, dikarenakan sedang bertugas penuh mengawal program kerja strategis di lapangan.",
+    "closingText": "Demikian surat permohonan dispensasi ini kami sampaikan. Besar harapan kami permohonan ini dapat dimaklumi dan dikabulkan. Atas bantuan, perhatian, dan kerja sama yang baik, kami ucapkan terima kasih.",
+    "defaultEventName": "Pelaksanaan Program Pengabdian KKN di Lapangan",
+    "defaultEventDate": "{periode}",
+    "defaultEventTime": "Jadwal Penuh Kegiatan",
+    "defaultEventLocation": "Wilayah {desa}"
+  },
+  {
+    "id": "pemberitahuan-kegiatan",
+    "category": "internal-eksternal",
+    "name": "Surat Pemberitahuan Pelaksanaan Program Kerja (Eksternal)",
+    "showEvent": true,
+    "defaultAttachment": "-",
+    "defaultNumber": "088/MENOREHMANDEH/KKN/VII/2026",
+    "regarding": "Pemberitahuan Pelaksanaan Program Kerja KKN",
+    "defaultRecipientName": "Ketua Pemuda / Kepala Dusun / Tokoh Masyarakat",
+    "defaultRecipientTitle": "Nagari Sungai Nyalo & Mandeh",
+    "openingText": "Bersama surat ini kami beritahukan kepada Bapak/Ibu bahwa mahasiswa KKN akan menyelenggarakan agenda pengabdian masyarakat yang ditujukan bagi seluruh warga sekitar, yang direncanakan berlangsung pada:",
+    "closingText": "Demikian surat pemberitahuan ini kami sampaikan agar dapat diketahui bersama dan dapat dikoordinasikan dengan segenap lapisan warga. Atas perhatian serta dukungannya, kami ucapkan terima kasih.",
+    "defaultEventName": "Aksi Bersih Lingkungan & Penanaman Bibit Tanaman Obat Keluarga (TOGA)",
+    "defaultEventDate": "Juli 2026",
+    "defaultEventTime": "08.00 WIB s/d Selesai",
+    "defaultEventLocation": "Area Pantai & Fasilitas Umum Nagari"
+  },
+  {
+    "id": "terima-kasih",
+    "category": "internal-eksternal",
+    "name": "Surat Ucapan Terima Kasih & Apresiasi Kemitraan (Eksternal)",
+    "showEvent": false,
+    "defaultAttachment": "-",
+    "defaultNumber": "210/MENOREHMANDEH/KKN/VIII/2026",
+    "regarding": "Ucapan Terima Kasih atas Dukungan Kegiatan",
+    "defaultRecipientName": "Bapak/Ibu Pimpinan Instansi / Mitra Kerja Sama",
+    "defaultRecipientTitle": "di Tempat",
+    "openingText": "Sehubungan dengan telah terlaksananya seluruh rangkaian program kerja Kuliah Kerja Nyata (KKN) dengan sukses dan lancar, kami segenap panitia mahasiswa bermaksud menyampaikan apresiasi dan penghargaan yang setinggi-tingginya atas partisipasi, kemitraan, dan bantuan yang Bapak/Ibu berikan pada agenda pengabdian kami di wilayah Pesisir Selatan.",
+    "closingText": "Semoga kontribusi serta jalinan silaturahmi yang telah terbangun dapat memberikan kemanfaatan yang berkelanjutan bagi kemajuan desa dan kesejahteraan masyarakat. Demikian surat ucapan terima kasih ini kami sampaikan dengan penuh rasa hormat.",
+    "defaultEventName": "Penutupan Rangkaian Program KKN-PPM Menoreh Mandeh 2026",
+    "defaultEventDate": "Agustus 2026",
+    "defaultEventTime": "Puncak Penutupan Program",
+    "defaultEventLocation": "Nagari Sungai Nyalo & Mandeh"
   }
 ];
 
@@ -493,29 +685,57 @@ function handleSaveSettings(e) {
 function initLetterGenerator() {
   const tplSelect = document.getElementById("letter-template-select");
   if (tplSelect) {
-    tplSelect.innerHTML = LETTER_TEMPLATES.map(
-      (t) => `<option value="${t.id}">${t.name}</option>`
-    ).join("");
+    // Render templates grouped by category with optgroup
+    const groups = {};
+    LETTER_TEMPLATES.forEach((tpl) => {
+      const cat = tpl.category || "permohonan";
+      if (!groups[cat]) groups[cat] = [];
+      groups[cat].push(tpl);
+    });
+
+    tplSelect.innerHTML = Object.entries(groups).map(([catKey, items]) => {
+      const groupLabel = LETTER_CATEGORIES[catKey] || catKey.toUpperCase();
+      return `
+        <optgroup label="${groupLabel}">
+          ${items.map((t) => `<option value="${t.id}">${t.name}</option>`).join("")}
+        </optgroup>
+      `;
+    }).join("");
 
     tplSelect.addEventListener("change", (e) => {
       const found = LETTER_TEMPLATES.find((t) => t.id === e.target.value);
       if (found) {
         const settings = getStorage(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
         const replacePlaceholders = (text) => (text || "")
-          .replaceAll("{universitas}", settings.kkn_university || "universitas")
-          .replaceAll("{desa}", settings.kkn_village || "desa")
-          .replaceAll("{periode}", settings.kkn_period || "periode KKN");
-        document.getElementById("letter-regarding").value = found.regarding;
+          .replaceAll("{universitas}", settings.kkn_university || "Universitas Gadjah Mada")
+          .replaceAll("{desa}", settings.kkn_village || "Nagari Mandeh & Sungai Nyalo")
+          .replaceAll("{periode}", settings.kkn_period || "Periode II Tahun 2026")
+          .replaceAll("{kkn_group}", settings.kkn_group_name || "Menoreh Mandeh")
+          .replaceAll("{kkn_unit}", "SB-004")
+          .replaceAll("{kormanit_nama}", settings.kkn_leader_name || "Muhammad Raja Alfaridzi")
+          .replaceAll("{kormanit_nim}", "23/521302/PA/22415");
+
+        if (found.defaultNumber) {
+          const numInput = document.getElementById("letter-number");
+          if (numInput) numInput.value = found.defaultNumber;
+        }
+        if (found.defaultAttachment !== undefined) {
+          const attInput = document.getElementById("letter-attachment");
+          if (attInput) attInput.value = found.defaultAttachment;
+        }
+        document.getElementById("letter-regarding").value = found.regarding || "Surat KKN";
         document.getElementById("letter-recipient-name").value = found.defaultRecipientName || "Bapak/Ibu yang kami hormati";
-        document.getElementById("letter-recipient-title").value = found.defaultRecipientTitle || "Di tempat";
+        document.getElementById("letter-recipient-title").value = found.defaultRecipientTitle || "di Tempat";
         document.getElementById("letter-opening").value = replacePlaceholders(found.openingText);
         document.getElementById("letter-closing").value = replacePlaceholders(found.closingText);
-        document.getElementById("letter-event-name").value = found.defaultEventName;
+        document.getElementById("letter-event-name").value = found.defaultEventName || "Kegiatan KKN";
         if (found.defaultEventDate) document.getElementById("letter-event-date").value = replacePlaceholders(found.defaultEventDate);
         if (found.defaultEventTime) document.getElementById("letter-event-time").value = replacePlaceholders(found.defaultEventTime);
         if (found.defaultEventLocation) document.getElementById("letter-event-location").value = replacePlaceholders(found.defaultEventLocation);
+        
         const eventToggle = document.getElementById("letter-show-event");
         if (eventToggle) eventToggle.checked = found.showEvent !== false;
+        
         updateLetterPreview();
       }
     });
