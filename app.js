@@ -124,6 +124,7 @@ const LETTER_TEMPLATES = [
   {
     id: "izin-bappedalitbang",
     name: "Surat Permohonan Izin KKN - BAPPEDALITBANG",
+    showEvent: false,
     regarding: "Permohonan Izin Pelaksanaan Kuliah Kerja Nyata (KKN)",
     defaultRecipientName: "Kepala BAPPEDALITBANG Kabupaten Pesisir Selatan",
     defaultRecipientTitle: "BAPPEDALITBANG Kabupaten Pesisir Selatan",
@@ -169,6 +170,7 @@ const LETTER_TEMPLATES = [
   {
     id: "terima-kasih",
     name: "Surat Ucapan Terima Kasih & Apresiasi Kegiatan",
+    showEvent: false,
     regarding: "Ucapan Terima Kasih atas Dukungan Kegiatan",
     openingText: "Sehubungan dengan telah terlaksananya rangkaian program kerja Kuliah Kerja Nyata (KKN) dengan sukses dan lancar, kami segenap panitia mahasiswa bermaksud menyampaikan apresiasi dan penghargaan yang setinggi-tingginya atas partisipasi dan bantuan Bapak/Ibu pada agenda:",
     closingText: "Semoga kontribusi serta jalinan silaturahmi yang telah terbangun dapat memberikan kemanfaatan yang berkelanjutan bagi kemajuan desa tercinta. Demikian surat ucapan terima kasih ini kami sampaikan dengan penuh rasa hormat.",
@@ -512,6 +514,8 @@ function initLetterGenerator() {
         if (found.defaultEventDate) document.getElementById("letter-event-date").value = replacePlaceholders(found.defaultEventDate);
         if (found.defaultEventTime) document.getElementById("letter-event-time").value = replacePlaceholders(found.defaultEventTime);
         if (found.defaultEventLocation) document.getElementById("letter-event-location").value = replacePlaceholders(found.defaultEventLocation);
+        const eventToggle = document.getElementById("letter-show-event");
+        if (eventToggle) eventToggle.checked = found.showEvent !== false;
         updateLetterPreview();
       }
     });
@@ -522,7 +526,16 @@ function initLetterGenerator() {
 
   initLetterSignerFields();
   initLetterSecondPage();
-  document.getElementById("letter-show-recipient")?.addEventListener("change", updateLetterPreview);
+  [
+    "letter-show-header",
+    "letter-show-meta",
+    "letter-show-recipient",
+    "letter-show-event",
+    "letter-show-body",
+    "letter-show-signatures"
+  ].forEach((id) => {
+    document.getElementById(id)?.addEventListener("change", updateLetterPreview);
+  });
 
   // Bind input listeners for live preview
   [
@@ -696,7 +709,12 @@ function updateLetterPreview() {
   const eLoc = document.getElementById("letter-event-location")?.value || "Balai Desa";
   const op = document.getElementById("letter-opening")?.value || "";
   const cl = document.getElementById("letter-closing")?.value || "";
+  const showHeader = document.getElementById("letter-show-header")?.checked !== false;
+  const showMeta = document.getElementById("letter-show-meta")?.checked !== false;
   const showRecipient = document.getElementById("letter-show-recipient")?.checked !== false;
+  const showEvent = document.getElementById("letter-show-event")?.checked !== false;
+  const showBody = document.getElementById("letter-show-body")?.checked !== false;
+  const showSignatures = document.getElementById("letter-show-signatures")?.checked !== false;
   const secretaryName = document.getElementById("letter-secretary-name")?.value || settings.kkn_secretary_name || "Sekretaris KKN";
   const secretaryRole = document.getElementById("letter-secretary-role")?.value || "Sekretaris KKN";
   const leaderName = document.getElementById("letter-leader-name")?.value || settings.kkn_leader_name || "Ketua Kelompok KKN";
@@ -724,7 +742,13 @@ function updateLetterPreview() {
 
   const elPrevRTitle = document.getElementById("prev-recipient-title");
   if (elPrevRTitle) elPrevRTitle.textContent = rTitle;
+  document.getElementById("letter-header-block")?.classList.toggle("hidden", !showHeader);
+  document.getElementById("letter-second-page-header")?.classList.toggle("hidden", !showHeader);
+  document.getElementById("letter-meta-block")?.classList.toggle("hidden", !showMeta);
   document.getElementById("letter-recipient-block")?.classList.toggle("hidden", !showRecipient);
+  document.getElementById("letter-event-block")?.classList.toggle("hidden", !showEvent);
+  document.getElementById("letter-body-block")?.classList.toggle("hidden", !showBody);
+  document.getElementById("letter-signature-block")?.classList.toggle("hidden", !showSignatures);
 
   document.getElementById("prev-letter-secretary-name")?.replaceChildren(document.createTextNode(secretaryName));
   document.getElementById("prev-letter-secretary-role")?.replaceChildren(document.createTextNode(secretaryRole));
@@ -834,7 +858,12 @@ async function downloadWordDocument() {
   const eLoc = document.getElementById("letter-event-location")?.value || "";
   const op = document.getElementById("letter-opening")?.value || "";
   const cl = document.getElementById("letter-closing")?.value || "";
+  const showHeader = document.getElementById("letter-show-header")?.checked !== false;
+  const showMeta = document.getElementById("letter-show-meta")?.checked !== false;
   const showRecipient = document.getElementById("letter-show-recipient")?.checked !== false;
+  const showEvent = document.getElementById("letter-show-event")?.checked !== false;
+  const showBody = document.getElementById("letter-show-body")?.checked !== false;
+  const showSignatures = document.getElementById("letter-show-signatures")?.checked !== false;
   const secretaryName = document.getElementById("letter-secretary-name")?.value || settings.kkn_secretary_name || "Sekretaris KKN";
   const secretaryRole = document.getElementById("letter-secretary-role")?.value || "Sekretaris KKN";
   const leaderName = document.getElementById("letter-leader-name")?.value || settings.kkn_leader_name || "Ketua Kelompok KKN";
@@ -868,6 +897,7 @@ async function downloadWordDocument() {
       </style>
     </head>
     <body>
+      ${showHeader ? `
       <table style="width: 100%; border-bottom: 3px double #000; margin: 0 0 12pt;">
         <tr>
           <td style="width: 16%; text-align: left; vertical-align: middle;"><img src="${ugmLogo}" alt="Logo UGM" style="width: 70px; height: 70px; object-fit: contain;"></td>
@@ -880,7 +910,9 @@ async function downloadWordDocument() {
           <td style="width: 16%; text-align: right; vertical-align: middle;"><img src="${kknLogo}" alt="Logo KKN" style="width: 70px; height: 70px; object-fit: contain;"></td>
         </tr>
       </table>
+      ` : ""}
 
+      ${showMeta ? `
       <div class="right">
         <p>${city}, ${date}</p>
       </div>
@@ -902,15 +934,21 @@ async function downloadWordDocument() {
           <td><b>${reg}</b></td>
         </tr>
       </table>
+      ` : ""}
 
-      ${showRecipient ? `<p style="margin-top: 15pt;">Kepada Yth.<br/>
+      ${showRecipient ? `
+      <p style="margin-top: 15pt;">Kepada Yth.<br/>
       <b>${rName}</b><br/>
       ${rTitle}<br/>
-      di Tempat</p>` : ""}
+      di Tempat</p>
+      ` : ""}
 
+      ${showBody ? `
       <p style="margin-top: 12pt;">Dengan hormat,</p>
       <p class="justify">${op}</p>
+      ` : ""}
 
+      ${showEvent ? `
       <table style="margin-left: 20pt; width: 90%;">
         <tr>
           <td style="width: 28%;">Hari, Tanggal</td>
@@ -933,9 +971,13 @@ async function downloadWordDocument() {
           <td><b>${eName}</b></td>
         </tr>
       </table>
+      ` : ""}
 
+      ${showBody ? `
       <p class="justify" style="margin-top: 12pt;">${cl}</p>
+      ` : ""}
 
+      ${showSignatures ? `
       <p class="center" style="margin-top: 25pt;">Hormat kami,<br/>Panitia Pelaksana KKN ${settings.kkn_group_name || "KKN"}</p>
 
       <table style="width: 100%; margin-top: 15pt;">
@@ -963,6 +1005,7 @@ async function downloadWordDocument() {
       `
           : ""
       }
+      ` : ""}
       ${secondPageEnabled ? `
         <div style="page-break-before: always; padding-top: 2.5cm;">
           <h2 class="center" style="font-size:14pt; border-bottom:3px double #000; padding-bottom:6pt;">${secondPageTitle}</h2>

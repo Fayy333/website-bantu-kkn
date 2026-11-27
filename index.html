@@ -356,9 +356,27 @@
             </select>
           </div>
 
+          <!-- Kop Surat -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+            <div class="flex items-center justify-between border-b pb-2">
+              <h3 class="font-bold text-slate-800 text-sm">Kop Surat Resmi</h3>
+              <label class="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer">
+                <input id="letter-show-header" type="checkbox" checked class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                Tampilkan Kop Surat
+              </label>
+            </div>
+            <p class="text-xs text-slate-500">Menampilkan kop resmi universitas & logo KKN. Nonaktifkan jika ingin mencetak pada kertas fisik yang sudah berkop.</p>
+          </div>
+
           <!-- Data Nomor & Tanggal -->
           <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
-            <h3 class="font-bold text-slate-800 text-sm border-b pb-2">Nomor & Tanggal Surat</h3>
+            <div class="flex items-center justify-between border-b pb-2">
+              <h3 class="font-bold text-slate-800 text-sm">Nomor & Tanggal Surat</h3>
+              <label class="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer">
+                <input id="letter-show-meta" type="checkbox" checked class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                Tampilkan Nomor & Tanggal
+              </label>
+            </div>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label class="text-xs font-semibold text-slate-600 block mb-1">Nomor Surat</label>
@@ -403,7 +421,13 @@
 
           <!-- Rincian Acara -->
           <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
-            <h3 class="font-bold text-slate-800 text-sm border-b pb-2">Detail Acara / Agenda Kegiatan</h3>
+            <div class="flex items-center justify-between border-b pb-2">
+              <h3 class="font-bold text-slate-800 text-sm">Detail Acara / Agenda Kegiatan</h3>
+              <label class="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer">
+                <input id="letter-show-event" type="checkbox" checked class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                Tampilkan Rincian Acara
+              </label>
+            </div>
             <div>
               <label class="text-xs font-semibold text-slate-600 block mb-1">Nama Kegiatan</label>
                 <input type="text" id="letter-event-name" value="Pelaksanaan Kuliah Kerja Nyata (KKN)" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-semibold">
@@ -426,7 +450,13 @@
 
           <!-- Penandatangan -->
           <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
-            <h3 class="font-bold text-slate-800 text-sm border-b pb-2">Tanda Tangan & Jabatan</h3>
+            <div class="flex items-center justify-between border-b pb-2">
+              <h3 class="font-bold text-slate-800 text-sm">Tanda Tangan & Jabatan</h3>
+              <label class="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer">
+                <input id="letter-show-signatures" type="checkbox" checked class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                Tampilkan Tanda Tangan
+              </label>
+            </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="space-y-2">
                 <p class="text-xs font-bold text-slate-600">Sekretaris</p>
@@ -461,7 +491,13 @@
 
           <!-- Teks Paragraf -->
           <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
-            <h3 class="font-bold text-slate-800 text-sm border-b pb-2">Teks Paragraf Surat</h3>
+            <div class="flex items-center justify-between border-b pb-2">
+              <h3 class="font-bold text-slate-800 text-sm">Teks Paragraf Surat</h3>
+              <label class="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer">
+                <input id="letter-show-body" type="checkbox" checked class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                Tampilkan Isi Paragraf
+              </label>
+            </div>
             <div>
               <label class="text-xs font-semibold text-slate-600 block mb-1">Paragraf Pembuka</label>
               <textarea id="letter-opening" rows="3" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none leading-relaxed">Sehubungan dengan pelaksanaan program Kuliah Kerja Nyata (KKN) mahasiswa di wilayah Desa, kami bermaksud mengundang Bapak/Ibu untuk dapat hadir dalam kegiatan Lokakarya Awal guna pemaparan dan koordinasi program kerja kemasyarakatan, yang insya Allah akan dilaksanakan pada:</textarea>
@@ -485,7 +521,7 @@
           <div id="print-area">
             <div id="a4-letter-preview" class="a4-paper letter-paper text-slate-900 space-y-3">
               <!-- Kop Surat -->
-              <div class="letterhead flex items-center justify-between pb-2">
+              <div id="letter-header-block" class="letterhead flex items-center justify-between pb-2">
                 <img src="assets/logo-ugm-template.png" alt="Logo UGM" class="letter-template-logo h-24 w-24 object-contain shrink-0 p-1">
                 <div class="text-center space-y-0.5 px-2">
                   <p class="font-bold text-[13px] tracking-wide uppercase">
@@ -504,7 +540,7 @@
               </div>
 
               <!-- Nomor & Tanggal -->
-              <div class="flex justify-between items-start pt-1 text-[12px]">
+              <div id="letter-meta-block" class="flex justify-between items-start pt-1 text-[12px]">
                 <div class="space-y-0.5">
                   <p>Nomor &nbsp; : <span id="prev-letter-number" class="font-mono">001/KKN/XI/2026</span></p>
                   <p>Lampiran : <span id="prev-letter-attachment">-</span></p>
@@ -524,11 +560,11 @@
               </div>
 
               <!-- Isi Surat -->
-              <div class="pt-2 space-y-2 text-[12px] text-justify">
+              <div id="letter-body-block" class="pt-2 space-y-2 text-[12px] text-justify">
                 <p>Dengan hormat,</p>
                 <p id="prev-letter-opening">Sehubungan dengan pelaksanaan program Kuliah Kerja Nyata...</p>
 
-                <div class="pl-4 space-y-1 text-[12px]">
+                <div id="letter-event-block" class="pl-4 space-y-1 text-[12px]">
                   <p>Hari, Tanggal : <span id="prev-event-date" class="font-bold">Kamis, 28 November 2026</span></p>
                   <p>Waktu &nbsp; &nbsp; &nbsp; &nbsp; : <span id="prev-event-time">09.00 WIB s/d Selesai</span></p>
                   <p>Tempat &nbsp; &nbsp; &nbsp; : <span id="prev-event-location">Aula Pertemuan Balai Desa</span></p>
@@ -539,7 +575,7 @@
               </div>
 
               <!-- Tanda Tangan -->
-              <div class="pt-4 text-center text-[12px]">
+              <div id="letter-signature-block" class="pt-4 text-center text-[12px]">
                 <p>Hormat kami,</p>
                 <p class="font-semibold">Panitia Pelaksana KKN <span class="kkn-group-text">Kelompok KKN 102</span></p>
 
@@ -559,7 +595,7 @@
             </div>
             <div id="letter-second-page" class="letter-second-page hidden mt-8">
               <!-- Kop surat lembar kedua mengikuti template utama -->
-              <div class="letterhead flex items-center justify-between pb-2">
+              <div id="letter-second-page-header" class="letterhead flex items-center justify-between pb-2">
                 <img src="assets/logo-ugm-template.png" alt="Logo UGM" class="letter-template-logo h-24 w-24 object-contain shrink-0 p-1">
                 <div class="text-center space-y-0.5 px-2">
                   <p class="font-bold text-[13px] tracking-wide uppercase">
